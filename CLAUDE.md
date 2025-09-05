@@ -89,3 +89,4 @@ rails db:reset
 - [要件定義](./docs/要件定義.md)
 - [認証フロー](./docs/認証フロー.md)
 - [Firebase Emulator を利用した開発](./firebase_emulator/README.md)
+- [API の実行テスト](./api.http)

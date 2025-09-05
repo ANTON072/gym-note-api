@@ -1,0 +1,9 @@
+### Firebase Auth - Sign In
+POST http://127.0.0.1:9199/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake-api-key
+Content-Type: application/json
+
+{
+  "email": "ougi@strobe-scope.net",
+  "password": "hogehoge",
+  "returnSecureToken": true
+}
