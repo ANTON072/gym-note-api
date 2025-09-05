@@ -32,6 +32,7 @@ services:
       DATABASE_USER: root
       DATABASE_PASSWORD: password
       DATABASE_NAME: gym_note_development
+      FIREBASE_PROJECT_ID: gym-note-app
       RAILS_ENV: development
       RUBY_DEBUG_OPEN: true
     stdin_open: true
