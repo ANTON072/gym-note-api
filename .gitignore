@@ -30,3 +30,30 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore Spring files.
+/spring/*.pid
+
+# Ignore uploaded test files
+/public/uploads
+/public/test
+
+# Ignore node_modules
+node_modules/
+
+# Ignore Yarn files
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# Ignore Mac finder artifacts
+.DS_Store
+
+# Ignore IDE specific files
+.idea/
+*.swp
+*.swo
+
+# Ignore database dumps
+*.sql
+*.dump

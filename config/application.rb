@@ -28,5 +28,27 @@ module App
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    config.colorize_logging = true
+
+    # 日本時間に設定
+    config.time_zone = "Tokyo"
+
+    # データベースへの保存時刻をローカルタイムゾーンに合わせる
+    config.active_record.default_timezone = :local
+
+    # 日本語をデフォルトロケールに設定
+    config.i18n.default_locale = :ja
+
+    # Strong Parametersのエラー時に例外を発生させる（開発環境での設定漏れ防止）
+    config.action_controller.action_on_unpermitted_parameters = :raise if Rails.env.development? || Rails.env.test?
+
+    # ジェネレーター設定
+    config.generators do |g|
+      g.test_framework false  # テストファイルを生成しない
+      g.helper false         # ヘルパーファイルを生成しない
+      g.assets false         # アセットファイルを生成しない
+      g.jbuilder false       # jbuilderファイルを生成しない
+    end
   end
 end
