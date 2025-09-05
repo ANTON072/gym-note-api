@@ -36,6 +36,25 @@ npm run emulators:export
    - Email/Password 認証でユーザーを作成可能
    - 作成したユーザーの ID トークンを使用して API のテストを実行
 
+## 開発用 ID トークンの取得方法
+
+### Using HTTPie
+
+```bash
+http POST "127.0.0.1:9199/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake-api-key" \
+  email="test@example.com" \
+  password="password123" \
+  returnSecureToken:=true
+```
+
+### Rails API での使用例
+
+```bash
+# 取得した ID トークンを使って API をテスト
+curl -H "Authorization: Bearer <ID_TOKEN>" \
+  http://localhost:3000/api/v1/some-endpoint
+```
+
 ## 注意事項
 
 - 本番環境では Google ログインを使用しますが、エミュレーターでは Email/Password ユーザーでテスト可能です
