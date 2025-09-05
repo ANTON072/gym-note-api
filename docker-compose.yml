@@ -33,6 +33,7 @@ services:
       DATABASE_PASSWORD: password
       DATABASE_NAME: gym_note_development
       RAILS_ENV: development
+      RUBY_DEBUG_OPEN: true
     stdin_open: true
     tty: true
 

@@ -1,0 +1,14 @@
+{
+  "name": "gym-note-api",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "web",
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "extensions.verifySignature": false
+      },
+      "extensions": ["Shopify.ruby-lsp", "KoichiSasada.vscode-rdbg"]
+    }
+  }
+}
