@@ -27,6 +27,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 docker-compose up --build
 ```
 
+### 重要な注意事項
+
+このプロジェクトは VSCode Dev Container で開発されています。そのため：
+
+- **bundle install は手動実行が必要**: Gemfile を編集した後は、Dev Container 内のターミナルで `bundle install` を実行してください
+- Claude Code から実行した bundle install は Dev Container 内に反映されません
+
 ### テスト実行
 
 このプロジェクトでは Minitest を使用してテストを記述します。
