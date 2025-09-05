@@ -6,7 +6,8 @@
   "customizations": {
     "vscode": {
       "settings": {
-        "extensions.verifySignature": false
+        "extensions.verifySignature": false,
+        "workbench.colorTheme": "Visual Studio Dark"
       },
       "extensions": ["Shopify.ruby-lsp", "KoichiSasada.vscode-rdbg"]
     }
