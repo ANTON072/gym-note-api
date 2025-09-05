@@ -29,6 +29,8 @@ docker-compose up --build
 
 ### テスト実行
 
+このプロジェクトでは Minitest を使用してテストを記述します。
+
 ```bash
 # 全テスト実行
 rails test
