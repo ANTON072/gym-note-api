@@ -1,0 +1,10 @@
+{
+  "name": "firebase_emulator",
+  "scripts": {
+    "emulators:start": "firebase emulators:start --only auth",
+    "emulators:export": "firebase emulators:export ./data"
+  },
+  "dependencies": {
+    "firebase-tools": "^14.15.2"
+  }
+}
