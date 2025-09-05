@@ -4,10 +4,8 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     environment:
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
       MARIADB_DATABASE: gym_note_development
-      MARIADB_USER: user
-      MARIADB_PASSWORD: password
+      MARIADB_ROOT_PASSWORD: password
       TZ: 'Asia/Tokyo'
     ports:
       - "3306:3306"
@@ -31,7 +29,7 @@ services:
         condition: service_healthy
     environment:
       DATABASE_HOST: db
-      DATABASE_USER: user
+      DATABASE_USER: root
       DATABASE_PASSWORD: password
       DATABASE_NAME: gym_note_development
       RAILS_ENV: development
