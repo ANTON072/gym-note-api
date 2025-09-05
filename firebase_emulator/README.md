@@ -53,10 +53,10 @@ http POST "127.0.0.1:9199/identitytoolkit.googleapis.com/v1/accounts:signInWithP
 {
   "email": "ougi@strobe-scope.net",
   "expiresIn": "3600",
-  "idToken": "eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJuYW1lIjoiYW50b24wNzIiLCJwaWN0dXJlIjoiIiwiZW1haWwiOiJvdWdpQHN0cm9iZS1zY29wZS5uZXQiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImF1dGhfdGltZSI6MTc1NzA1NjQ4NSwidXNlcl9pZCI6InpIUGFYd0RYVmFMOTljRjFaOWdETVdqT3J4NTUiLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7ImVtYWlsIjpbIm91Z2lAc3Ryb2JlLXNjb3BlLm5ldCJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn0sImlhdCI6MTc1NzA1NjQ4NSwiZXhwIjoxNzU3MDYwMDg1LCJhdWQiOiJneW0tbm90ZS1hcHAiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZ3ltLW5vdGUtYXBwIiwic3ViIjoiekhQYVh3RFhWYUw5OWNGMVo5Z0RNV2pPcng1NSJ9.",
-  "kind": "identitytoolkit#VerifyPasswordResponse",
-  "localId": "zHPaXwDXVaL99cF1Z9gDMWjOrx55",
-  "refreshToken": "eyJfQXV0aEVtdWxhdG9yUmVmcmVzaFRva2VuIjoiRE8gTk9UIE1PRElGWSIsImxvY2FsSWQiOiJ6SFBhWHdEWFZhTDk5Y0YxWjlnRE1Xak9yeDU1IiwicHJvdmlkZXIiOiJwYXNzd29yZCIsImV4dHJhQ2xhaW1zIjp7fSwicHJvamVjdElkIjoiZ3ltLW5vdGUtYXBwIn0=",
+  "idToken": "xxxx",
+  "kind": "xxx",
+  "localId": "xxx",
+  "refreshToken": "xxx",
   "registered": true
 }
 ```
