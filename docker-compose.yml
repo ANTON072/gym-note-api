@@ -35,6 +35,7 @@ services:
       FIREBASE_PROJECT_ID: gym-note-app
       RAILS_ENV: development
       RUBY_DEBUG_OPEN: true
+      USE_FIREBASE_EMULATOR: true
     stdin_open: true
     tty: true
 
