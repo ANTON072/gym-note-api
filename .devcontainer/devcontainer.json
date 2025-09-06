@@ -7,7 +7,7 @@
     "vscode": {
       "settings": {
         "extensions.verifySignature": false,
-        "workbench.colorTheme": "Visual Studio Dark"
+        "workbench.colorTheme": "Tokyo Night"
       },
       "extensions": ["Shopify.ruby-lsp", "KoichiSasada.vscode-rdbg"]
     }
