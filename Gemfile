@@ -51,3 +51,8 @@ group :development, :test do
   # Mocking and stubbing library
   gem "mocha"
 end
+
+group :development do
+  # Git hooks manager
+  gem "lefthook", require: false
+end

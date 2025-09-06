@@ -1,0 +1,34 @@
+# Lefthook設定ファイル
+# Git hooks管理とコード品質チェック
+
+pre-commit:
+  parallel: true
+  commands:
+    # RuboCop実行（変更されたファイルのみ）
+    rubocop:
+      glob: "*.{rb}"
+      run: bundle exec rubocop {staged_files} --force-exclusion --display-only-failed
+      stage_fixed: true
+
+    # Trailing whitespace自動修正
+    trailing-whitespace:
+      glob: "*.{rb,yml,md}"
+      run: "sed -i 's/[[:space:]]*$//' {staged_files}"
+      stage_fixed: true
+
+    # Final newline自動追加
+    final-newline:
+      glob: "*.{rb,yml,md}"
+      run: |
+        for file in {staged_files}; do
+          if [ -n "$(tail -c1 "$file" 2>/dev/null)" ]; then
+            echo >> "$file"
+          fi
+        done
+      stage_fixed: true
+
+pre-push:
+  commands:
+    # プッシュ前にテスト実行
+    tests:
+      run: bundle exec rails test
