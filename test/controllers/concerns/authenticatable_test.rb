@@ -1,36 +1,33 @@
 require "test_helper"
 
-class AuthenticatableTest < ActionController::TestCase
+class AuthenticatableTest < ActiveSupport::TestCase
   class TestController < ActionController::API
     include Authenticatable
+    attr_accessor :request
 
-    def index
-      render json: { message: "success" }
-    end
-
-    def protected_action
-      authenticate_user!
-      render json: { user_id: current_user.id }
+    def initialize
+      super
+      self.request = MockRequest.new
     end
   end
 
-  def setup
-    @controller = TestController.new
-    @routes = ActionDispatch::Routing::RouteSet.new
-    @routes.draw do
-      get "test", to: "authenticatable_test/test#index"
-      get "protected", to: "authenticatable_test/test#protected_action"
-    end
-    @controller.instance_variable_set(:@_routes, @routes)
+  class MockRequest
+    attr_accessor :headers
 
+    def initialize
+      @headers = {}
+    end
+  end
+
+  setup do
+    @controller = TestController.new
     # テスト用のFirebaseプロジェクトID
     @project_id = "test-project"
-    allow_any_instance_of(TestController).to receive(:firebase_project_id).and_return(@project_id)
+    ENV["FIREBASE_PROJECT_ID"] = @project_id
   end
 
   test "Authorizationヘッダーからトークンを抽出できること" do
-    token = "Bearer valid.jwt.token"
-    @request.headers["Authorization"] = token
+    @controller.request.headers["Authorization"] = "Bearer valid.jwt.token"
 
     assert_equal "valid.jwt.token", @controller.send(:extract_token_from_header)
   end
@@ -40,7 +37,7 @@ class AuthenticatableTest < ActionController::TestCase
   end
 
   test "Authorizationヘッダーの形式が間違っている場合はnilを返すこと" do
-    @request.headers["Authorization"] = "InvalidFormat"
+    @controller.request.headers["Authorization"] = "InvalidFormat"
     assert_nil @controller.send(:extract_token_from_header)
   end
 
@@ -53,7 +50,7 @@ class AuthenticatableTest < ActionController::TestCase
       "picture" => "https://example.com/avatar.jpg"
     }
 
-    Firebase::AuthService.expects(:verify_id_token).with(token, @project_id).returns(payload)
+    Firebase::AuthService.stubs(:verify_id_token).with(token, @project_id).returns(payload)
 
     result = @controller.send(:verify_token, token)
     assert_equal payload, result
@@ -62,43 +59,51 @@ class AuthenticatableTest < ActionController::TestCase
   test "無効なトークンの場合はnilを返すこと" do
     token = "invalid.jwt.token"
 
-    Firebase::AuthService.expects(:verify_id_token).with(token, @project_id).raises(JWT::VerificationError.new("Invalid token"))
+    Firebase::AuthService.stubs(:verify_id_token).with(token, @project_id).raises(JWT::VerificationError.new("Invalid token"))
 
     assert_nil @controller.send(:verify_token, token)
   end
 
-  test "authenticate_user!はトークンがない場合401を返すこと" do
-    get :protected_action
-    assert_response :unauthorized
-    assert_equal({ "error" => "Authentication required" }, JSON.parse(response.body))
+  test "トークンがない場合にauthenticate_user!が401レスポンスを返すこと" do
+    mock_response = { error: "Authentication required" }
+    @controller.expects(:render).with(json: mock_response, status: :unauthorized)
+
+    @controller.send(:authenticate_user!)
   end
 
-  test "authenticate_user!は無効なトークンの場合401を返すこと" do
-    @request.headers["Authorization"] = "Bearer invalid.token"
+  test "無効なトークンの場合にauthenticate_user!が401レスポンスを返すこと" do
+    @controller.request.headers["Authorization"] = "Bearer invalid.token"
 
-    Firebase::AuthService.expects(:verify_id_token).raises(JWT::VerificationError.new("Invalid token"))
+    Firebase::AuthService.stubs(:verify_id_token).raises(JWT::VerificationError.new("Invalid token"))
 
-    get :protected_action
-    assert_response :unauthorized
-    assert_equal({ "error" => "Invalid token" }, JSON.parse(response.body))
+    mock_response = { error: "Invalid token" }
+    @controller.expects(:render).with(json: mock_response, status: :unauthorized)
+
+    @controller.send(:authenticate_user!)
   end
 
-  test "authenticate_user!は有効なトークンと既存ユーザーで成功すること" do
-    user = users(:one)  # fixture from users.yml
+  test "有効なトークンでユーザーを作成または更新すること" do
+    user = users(:one)
     token = "valid.token"
     payload = {
       "sub" => user.firebase_uid,
-      "email" => user.email,
-      "name" => user.name,
-      "picture" => user.image_url
+      "email" => "updated@example.com",
+      "name" => "Updated User",
+      "picture" => "https://example.com/new-avatar.jpg"
     }
 
-    @request.headers["Authorization"] = "Bearer #{token}"
+    @controller.request.headers["Authorization"] = "Bearer #{token}"
+    Firebase::AuthService.stubs(:verify_id_token).with(token, @project_id).returns(payload)
 
-    Firebase::AuthService.expects(:verify_id_token).with(token, @project_id).returns(payload)
+    @controller.send(:authenticate_user!)
 
-    get :protected_action
-    assert_response :success
-    assert_equal({ "user_id" => user.id }, JSON.parse(response.body))
+    # ユーザー情報が更新されていることを確認
+    user.reload
+    assert_equal "updated@example.com", user.email
+    assert_equal "Updated User", user.name
+    assert_equal "https://example.com/new-avatar.jpg", user.image_url
+
+    # current_userが設定されていることを確認
+    assert_equal user, @controller.send(:current_user)
   end
 end
