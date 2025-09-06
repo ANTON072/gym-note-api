@@ -110,37 +110,37 @@ module Firebase
       def verify_emulator_token(token, project_id)
         # 署名検証なしでデコード
         payload, _ = JWT.decode(token, nil, false)
-        
+
         # 手動で検証を実施
         now = Time.now.to_i
-        
+
         # 発行者の確認
         expected_issuer = "#{ISSUER_PREFIX}#{project_id}"
         unless payload["iss"] == expected_issuer
           raise JWT::VerificationError, "Invalid issuer. Expected #{expected_issuer}, got #{payload["iss"]}"
         end
-        
+
         # 対象者の確認
         unless payload["aud"] == project_id
           raise JWT::VerificationError, "Invalid audience. Expected #{project_id}, got #{payload["aud"]}"
         end
-        
+
         # 有効期限の確認
         if payload["exp"] && payload["exp"] < now
           raise JWT::VerificationError, "Token has expired"
         end
-        
+
         # 発行時刻の確認
         if payload["iat"] && payload["iat"] > now
           raise JWT::VerificationError, "Invalid issued at time"
         end
-        
+
         # 追加の検証
         validate_auth_time(payload)
         validate_subject(payload)
-        
+
         Rails.logger.info "Firebase Emulator token verified for user: #{payload["sub"]}"
-        
+
         payload
       end
     end

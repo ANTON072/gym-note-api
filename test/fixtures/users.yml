@@ -1,0 +1,13 @@
+# テスト用のユーザーデータ
+
+one:
+  firebase_uid: "firebase_uid_123"
+  email: "test@example.com"
+  name: "Test User"
+  image_url: "https://example.com/avatar.jpg"
+
+two:
+  firebase_uid: "firebase_uid_456"
+  email: "test2@example.com"
+  name: "Test User 2"
+  image_url: "https://example.com/avatar2.jpg"

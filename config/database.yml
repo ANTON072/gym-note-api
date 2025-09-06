@@ -13,6 +13,9 @@ development:
 test:
   <<: *default
   database: gym_note_test
+  username: <%= ENV.fetch("DATABASE_USER") { "root" } %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD") { "" } %>
+  host: <%= ENV.fetch("DATABASE_HOST") { "127.0.0.1" } %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
