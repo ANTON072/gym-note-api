@@ -25,7 +25,12 @@ module Authenticatable
 
   # Firebase プロジェクトIDを環境変数から取得する
   def firebase_project_id
-    ENV["FIREBASE_PROJECT_ID"] || raise("FIREBASE_PROJECT_ID environment variable is not set")
+    ENV["FIREBASE_PROJECT_ID"] || raise(
+      Rails::Configuration::ConfigurationError,
+      "FIREBASE_PROJECT_ID environment variable is not set. " \
+      "Please set FIREBASE_PROJECT_ID in your environment configuration " \
+      "(e.g., in .env or your deployment environment) to enable Firebase authentication."
+    )
   end
 
   # 認証を必須とするアクションで使用する
@@ -53,22 +58,45 @@ module Authenticatable
     firebase_uid = payload["sub"]
     user = User.find_by(firebase_uid: firebase_uid)
 
+    # Payloadデータを安全な属性に変換
+    user_attributes = build_user_attributes_from_payload(payload)
+
     if user
       # 既存ユーザーの情報を最新に更新
-      user.update!(
-        email: payload["email"],
-        name: payload["name"],
-        image_url: payload["picture"]
-      )
+      user.update!(user_attributes)
       user
     else
       # 新規ユーザー作成
-      User.create!(
-        firebase_uid: firebase_uid,
-        email: payload["email"],
-        name: payload["name"],
-        image_url: payload["picture"]
-      )
+      User.create!(user_attributes.merge(firebase_uid: firebase_uid))
     end
+  end
+
+  # Firebase payloadから安全なユーザー属性を構築する
+  def build_user_attributes_from_payload(payload)
+    {
+      email: sanitize_email(payload["email"]),
+      name: sanitize_name(payload["name"]),
+      image_url: sanitize_image_url(payload["picture"])
+    }
+  end
+
+  # メールアドレスのサニタイズ
+  def sanitize_email(email)
+    return nil if email.blank?
+    email.to_s.strip.downcase
+  end
+
+  # 名前のサニタイズ
+  def sanitize_name(name)
+    return nil if name.blank?
+    name.to_s.strip
+  end
+
+  # 画像URLのサニタイズ
+  def sanitize_image_url(image_url)
+    return nil if image_url.blank?
+    # HTTPSまたはHTTPで始まるURLのみ許可
+    url = image_url.to_s.strip
+    url.match?(/\Ahttps?:\/\/.+/) ? url : nil
   end
 end
