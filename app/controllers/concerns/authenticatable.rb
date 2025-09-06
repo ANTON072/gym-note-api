@@ -7,11 +7,11 @@ module Authenticatable
   def extract_token_from_header
     auth_header = request.headers["Authorization"]
     return nil if auth_header.blank?
-    
+
     # "Bearer token" 形式からtokenを抽出
     match = auth_header.match(/\ABearer (.+)\z/)
     return nil unless match
-    
+
     match[1]
   end
 
