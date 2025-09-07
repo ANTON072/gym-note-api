@@ -52,11 +52,14 @@
 
 ### セット
 
-- 重量
-  - ダンベル種目の場合は片方の重量になる
-  - 重量はグラム単位で登録
-- レップ数
-  - 片方ずつやる種目の場合は左右のレップを別で入力する
+Rails の単一テーブル継承（STI）を使用：
+
+- StrengthSet（筋トレ用）
+  - 重量（ダンベル種目の場合は片方の重量）
+  - レップ数（片方ずつやる種目の場合は左右別）
+- CardioSet（有酸素運動用）
+  - 実施時間
+  - 消費カロリー
 
 ### ワークアウト（その日にやったトレーニング）
 
@@ -81,19 +84,24 @@
 | name          | string   | 種目名                     |
 | is_dumbbell   | boolean  | ダンベル種目フラグ         |
 | is_unilateral | boolean  | 片方ずつ実施する種目フラグ |
+| is_bodyweight | boolean  | 自重種目フラグ             |
+| is_cardio     | boolean  | 有酸素運動フラグ           |
+| memo          | text     | メモ                       |
 | created_at    | datetime | 作成日時（UTC）            |
 | updated_at    | datetime | 更新日時（UTC）            |
 
 ### Workout
 
-| フィールド   | 型       | 説明                        |
-| ------------ | -------- | --------------------------- |
-| id           | integer  | 主キー                      |
-| user_id      | integer  | ユーザー ID                 |
-| performed_at | datetime | ワークアウト実施日時（UTC） |
-| total_volume | integer  | 総負荷量（グラム）          |
-| created_at   | datetime | 作成日時（UTC）             |
-| updated_at   | datetime | 更新日時（UTC）             |
+| フィールド         | 型       | 説明                        |
+| ------------------ | -------- | --------------------------- |
+| id                 | integer  | 主キー                      |
+| user_id            | integer  | ユーザー ID                 |
+| performed_start_at | datetime | ワークアウト開始日時（UTC） |
+| performed_end_at   | datetime | ワークアウト終了日時（UTC） |
+| total_volume       | integer  | 総負荷量（グラム）          |
+| memo               | text     | メモ                        |
+| created_at         | datetime | 作成日時（UTC）             |
+| updated_at         | datetime | 更新日時（UTC）             |
 
 ### WorkoutExercise
 
@@ -107,19 +115,22 @@
 | created_at   | datetime | 作成日時（UTC）                               |
 | updated_at   | datetime | 更新日時（UTC）                               |
 
-### Set
+### Set（単一テーブル継承）
 
-| フィールド          | 型       | 説明                           |
-| ------------------- | -------- | ------------------------------ |
-| id                  | integer  | 主キー                         |
-| workout_exercise_id | integer  | WorkoutExerciseID              |
-| weight              | integer  | 重量（グラム）                 |
-| reps                | integer  | レップ数（通常種目）           |
-| left_reps           | integer  | 左側レップ数（片方ずつの種目） |
-| right_reps          | integer  | 右側レップ数（片方ずつの種目） |
-| order               | integer  | セット順                       |
-| created_at          | datetime | 作成日時（UTC）                |
-| updated_at          | datetime | 更新日時（UTC）                |
+| フィールド          | 型       | 説明                                          |
+| ------------------- | -------- | --------------------------------------------- |
+| id                  | integer  | 主キー                                        |
+| workout_exercise_id | integer  | WorkoutExerciseID                             |
+| type                | string   | STI 識別子（StrengthSet/CardioSet）           |
+| weight              | integer  | 重量（グラム）※StrengthSet 用                 |
+| reps                | integer  | レップ数（通常種目）※StrengthSet 用           |
+| left_reps           | integer  | 左側レップ数（片方ずつの種目）※StrengthSet 用 |
+| right_reps          | integer  | 右側レップ数（片方ずつの種目）※StrengthSet 用 |
+| duration_seconds    | integer  | 実施時間（秒）※CardioSet 用                   |
+| calories            | integer  | 消費カロリー（kcal）※CardioSet 用             |
+| order               | integer  | セット順                                      |
+| created_at          | datetime | 作成日時（UTC）                               |
+| updated_at          | datetime | 更新日時（UTC）                               |
 
 ### Weight
 
@@ -178,8 +189,10 @@ GET /workouts?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=10
   "workouts": [
     {
       "id": 1,
-      "performed_at": "2024-01-15T10:30:00Z",
+      "performed_start_at": "2024-01-15T10:00:00Z",
+      "performed_end_at": "2024-01-15T11:30:00Z",
       "total_volume": 1500000,
+      "memo": "今日は調子が良かった",
       "exercises": [
         {
           "id": 1,
@@ -187,7 +200,10 @@ GET /workouts?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=10
             "id": 1,
             "name": "ベンチプレス",
             "is_dumbbell": false,
-            "is_unilateral": false
+            "is_unilateral": false,
+            "is_bodyweight": false,
+            "is_cardio": false,
+            "memo": null
           },
           "total_volume": 1000000,
           "sets": [
@@ -195,7 +211,8 @@ GET /workouts?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=10
               "id": 1,
               "weight": 60000,
               "reps": 10,
-              "order": 1
+              "order": 1,
+              "type": "StrengthSet"
             }
           ]
         }
@@ -226,12 +243,15 @@ POST /workouts
 
 ```json
 {
-  "performed_at": "2024-01-15T10:30:00Z",
+  "performed_start_at": "2024-01-15T10:00:00Z",
+  "performed_end_at": "2024-01-15T11:30:00Z",
+  "memo": "今日は調子が良かった",
   "exercises": [
     {
       "exercise_id": 1,
       "sets": [
         {
+          "type": "StrengthSet",
           "weight": 60000,
           "reps": 10
         }
@@ -241,6 +261,7 @@ POST /workouts
       "exercise_id": 2,
       "sets": [
         {
+          "type": "StrengthSet",
           "weight": 30000,
           "reps": 12
         }
