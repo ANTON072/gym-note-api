@@ -72,6 +72,7 @@ bundle exec lefthook run pre-commit
 ```
 
 Lefthook により以下が自動実行されます：
+
 - コミット前：RuboCop チェック、trailing whitespace 修正、final newline 追加
 - プッシュ前：テスト実行
 
@@ -115,3 +116,6 @@ rails db:reset
 - [認証フロー](./docs/認証フロー.md)
 - [Firebase Emulator を利用した開発](./firebase_emulator/README.md)
 - [API の実行テスト](./api.http)
+- [コードレビュー対応指針](./docs/コードレビュー対応指針.md)
+- [テスト実装のベストプラクティス](./docs/テスト実装のベストプラクティス.md)
+- [API 設計](./docs/API設計.md)
