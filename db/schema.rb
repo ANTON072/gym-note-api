@@ -24,6 +24,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
     t.index ["exercise_type"], name: "index_exercises_on_exercise_type"
     t.index ["name"], name: "index_exercises_on_name", unique: true
     t.check_constraint "`exercise_type` <> 0 or `body_part` is not null", name: "exercises_body_part_not_null_for_strength"
+    t.check_constraint "`exercise_type` <> 1 or `body_part` is null", name: "exercises_body_part_null_for_cardio"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
