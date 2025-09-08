@@ -22,5 +22,5 @@ class Exercise < ApplicationRecord
   validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :exercise_type, presence: true
   validates :laterality, presence: true, if: :strength?
-  validates :laterality, absence: { message: "有酸素運動の場合、実施形態は設定できません" }, if: :cardio?
+  validates :laterality, absence: { message: :cardio_cannot_have_laterality }, if: :cardio?
 end

@@ -34,33 +34,33 @@ class ExerciseTest < ActiveSupport::TestCase
   test "nameが必須である" do
     @exercise.name = ""
     assert_not @exercise.valid?
-    assert_includes @exercise.errors[:name], "を入力してください"
+    assert_includes @exercise.errors.details[:name], { error: :blank }
   end
 
   test "nameが一意である" do
     @exercise.save!
     duplicate_exercise = @exercise.dup
     assert_not duplicate_exercise.valid?
-    assert_includes duplicate_exercise.errors[:name], "はすでに存在します"
+    assert_includes duplicate_exercise.errors.details[:name], { error: :taken, value: "ベンチプレス" }
   end
 
   test "nameの最大文字数は255文字である" do
     @exercise.name = "a" * 256
     assert_not @exercise.valid?
-    assert_includes @exercise.errors[:name], "は255文字以内で入力してください"
+    assert_includes @exercise.errors.details[:name], { error: :too_long, count: 255 }
   end
 
   test "exercise_typeが必須である" do
     @exercise.exercise_type = nil
     assert_not @exercise.valid?
-    assert_includes @exercise.errors[:exercise_type], "を入力してください"
+    assert_includes @exercise.errors.details[:exercise_type], { error: :blank }
   end
 
   test "strengthタイプの場合lateralityが必須である" do
     @exercise.exercise_type = "strength"
     @exercise.laterality = nil
     assert_not @exercise.valid?
-    assert_includes @exercise.errors[:laterality], "を入力してください"
+    assert_includes @exercise.errors.details[:laterality], { error: :blank }
   end
 
   test "cardioタイプの場合lateralityは必ずnilである" do
@@ -73,7 +73,7 @@ class ExerciseTest < ActiveSupport::TestCase
     @exercise.exercise_type = "cardio"
     @exercise.laterality = "bilateral"
     assert_not @exercise.valid?
-    assert_includes @exercise.errors[:laterality], "有酸素運動の場合、実施形態は設定できません"
+    assert_includes @exercise.errors.details[:laterality], { error: :present }
   end
 
   test "memoは任意項目である" do

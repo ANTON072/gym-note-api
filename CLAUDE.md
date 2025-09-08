@@ -8,6 +8,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - テストの記述（test名、アサーションメッセージなど）は日本語で書く
 - 変数名やメソッド名は英語のまま
 
+### エラーメッセージとI18n
+- **エラーメッセージはハードコードしない**: カスタムバリデーションのエラーメッセージは直接文字列で指定せず、シンボルを使用してI18nで管理する
+- **I18nファイルの活用**: `config/locales/ja.yml`にエラーメッセージを定義し、`errors.add(:field, :error_key)`の形式で使用する
+- **テストの堅牢性**: テストではエラーメッセージの文字列ではなく、`errors.details`を使用してエラーの種類（シンボル）を検証する
+
 ## アプリケーションアーキテクチャ
 
 このプロジェクトは筋力トレーニングの記録管理を行う Rails 8.0.2 API サーバーです。
@@ -40,6 +45,7 @@ docker-compose up --build
 - **bundle install は手動実行が必要**: Gemfile を編集した後は、Dev Container 内のターミナルで `bundle install` を実行してください
 - Claude Code から実行した bundle install は Dev Container 内に反映されません
 - **テスト実行は手動で行う**: Claude Code はテスト実行を試行しない。テストは開発者が Dev Container 内で手動実行する
+- **実装は段階的に進める**: テストが失敗した場合は、必ずテストが通ることを確認してから次のモデルの実装に進む。勝手に次の実装を進めない
 
 ### テスト実行
 

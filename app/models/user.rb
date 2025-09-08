@@ -15,6 +15,8 @@
 #  index_users_on_firebase_uid  (firebase_uid) UNIQUE
 #
 class User < ApplicationRecord
+  has_many :workouts, dependent: :destroy
+
   # Firebase認証用のバリデーション
   validates :firebase_uid, presence: true, uniqueness: true
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
