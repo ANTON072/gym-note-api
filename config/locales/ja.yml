@@ -1,0 +1,18 @@
+ja:
+  activerecord:
+    errors:
+      messages:
+        blank: "を入力してください"
+        invalid: "は不正な値です"
+        taken: "はすでに存在します"
+      models:
+        user:
+          attributes:
+            firebase_uid:
+              blank: "Firebase UIDを入力してください"
+              taken: "このFirebase UIDはすでに登録されています"
+            email:
+              blank: "メールアドレスを入力してください"
+              invalid: "メールアドレスの形式が正しくありません"
+            name:
+              blank: "名前を入力してください"
