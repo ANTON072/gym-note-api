@@ -2,14 +2,15 @@ class AddBodyPartToExercises < ActiveRecord::Migration[8.0]
   # 将来のモデル変更でマイグレーションが壊れるのを防ぐため、一時的なモデルを定義します
   class TmpExercise < ApplicationRecord
     self.table_name = 'exercises'
+    enum exercise_type: { strength: 0, cardio: 1 }
+    enum body_part: { legs: 0, back: 1, shoulders: 2, arms: 3, chest: 4 }
   end
 
   def up
     add_column :exercises, :body_part, :integer
 
     # 既存のstrengthタイプのレコードにデフォルト値を設定します
-    # strength は 0, デフォルト部位として chest (4) を設定
-    TmpExercise.where(exercise_type: 0).update_all(body_part: 4)
+    TmpExercise.where(exercise_type: :strength).update_all(body_part: TmpExercise.body_parts[:chest])
 
     add_index :exercises, :body_part
     add_index :exercises, [ :exercise_type, :body_part ]
