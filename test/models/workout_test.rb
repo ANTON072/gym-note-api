@@ -23,7 +23,7 @@ class WorkoutTest < ActiveSupport::TestCase
       total_volume: 1000
     )
     assert_not workout.valid?
-    assert_includes workout.errors[:user], "must exist"
+    assert_includes workout.errors[:user], "を入力してください"
   end
 
   test "performed_start_atは必須である" do
@@ -33,7 +33,7 @@ class WorkoutTest < ActiveSupport::TestCase
       total_volume: 1000
     )
     assert_not workout.valid?
-    assert_includes workout.errors[:performed_start_at], "can't be blank"
+    assert_includes workout.errors[:performed_start_at], "を入力してください"
   end
 
   test "performed_end_atは省略可能である" do
@@ -50,6 +50,7 @@ class WorkoutTest < ActiveSupport::TestCase
       user: @user,
       performed_start_at: Time.current
     )
+    workout.valid?
     assert_equal 0, workout.total_volume
   end
 
@@ -60,7 +61,7 @@ class WorkoutTest < ActiveSupport::TestCase
       total_volume: -100
     )
     assert_not workout.valid?
-    assert_includes workout.errors[:total_volume], "must be greater than or equal to 0"
+    assert_includes workout.errors[:total_volume], "は0以上の値にしてください"
   end
 
   test "performed_end_atはperformed_start_at以降でなければならない" do

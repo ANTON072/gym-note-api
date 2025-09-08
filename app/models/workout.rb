@@ -2,7 +2,7 @@ class Workout < ApplicationRecord
   belongs_to :user
 
   validates :performed_start_at, presence: true
-  validates :total_volume, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :total_volume, numericality: { greater_than_or_equal_to: 0 }
   validate :end_time_after_start_time
 
   before_validation :set_default_total_volume

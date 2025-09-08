@@ -40,6 +40,7 @@ docker-compose up --build
 - **bundle install は手動実行が必要**: Gemfile を編集した後は、Dev Container 内のターミナルで `bundle install` を実行してください
 - Claude Code から実行した bundle install は Dev Container 内に反映されません
 - **テスト実行は手動で行う**: Claude Code はテスト実行を試行しない。テストは開発者が Dev Container 内で手動実行する
+- **実装は段階的に進める**: テストが失敗した場合は、必ずテストが通ることを確認してから次のモデルの実装に進む。勝手に次の実装を進めない
 
 ### テスト実行
 
