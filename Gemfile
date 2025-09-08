@@ -58,4 +58,5 @@ end
 group :development do
   # Git hooks manager
   gem "lefthook", require: false
+  gem "annotaterb"
 end
