@@ -82,7 +82,7 @@ class WorkoutTest < ActiveSupport::TestCase
       total_volume: -100
     )
     assert_not workout.valid?
-    assert_includes workout.errors.details[:total_volume], { error: :greater_than_or_equal_to, count: 0 }
+    assert_includes workout.errors.details[:total_volume], { error: :greater_than_or_equal_to, value: -100, count: 0 }
   end
 
   test "performed_end_atはperformed_start_at以降でなければならない" do
