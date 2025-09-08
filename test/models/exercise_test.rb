@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: exercises
+#
+#  id            :bigint           not null, primary key
+#  exercise_type :integer
+#  laterality    :integer
+#  memo          :text(65535)
+#  name          :string(255)
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#
+# Indexes
+#
+#  index_exercises_on_exercise_type  (exercise_type)
+#  index_exercises_on_name           (name) UNIQUE
+#
 require "test_helper"
 
 class ExerciseTest < ActiveSupport::TestCase
