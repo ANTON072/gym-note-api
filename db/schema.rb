@@ -12,8 +12,8 @@
 
 ActiveRecord::Schema[8.0].define(version: 2025_09_08_074249) do
   create_table "exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "name"
-    t.integer "exercise_type"
+    t.string "name", null: false
+    t.integer "exercise_type", null: false
     t.integer "laterality"
     t.text "memo"
     t.datetime "created_at", null: false
