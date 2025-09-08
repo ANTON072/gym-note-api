@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_08_082419) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
   create_table "exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "exercise_type", null: false
@@ -18,6 +18,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_082419) do
     t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "body_part"
+    t.index ["body_part"], name: "index_exercises_on_body_part"
+    t.index ["exercise_type", "body_part"], name: "index_exercises_on_exercise_type_and_body_part"
     t.index ["exercise_type"], name: "index_exercises_on_exercise_type"
     t.index ["name"], name: "index_exercises_on_name", unique: true
   end

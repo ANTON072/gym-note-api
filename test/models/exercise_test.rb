@@ -3,6 +3,7 @@
 # Table name: exercises
 #
 #  id            :bigint           not null, primary key
+#  body_part     :integer
 #  exercise_type :integer          not null
 #  laterality    :integer
 #  memo          :text(65535)
@@ -12,8 +13,10 @@
 #
 # Indexes
 #
-#  index_exercises_on_exercise_type  (exercise_type)
-#  index_exercises_on_name           (name) UNIQUE
+#  index_exercises_on_body_part                    (body_part)
+#  index_exercises_on_exercise_type                (exercise_type)
+#  index_exercises_on_exercise_type_and_body_part  (exercise_type,body_part)
+#  index_exercises_on_name                         (name) UNIQUE
 #
 require "test_helper"
 
@@ -23,6 +26,7 @@ class ExerciseTest < ActiveSupport::TestCase
       name: "ベンチプレス",
       exercise_type: "strength",
       laterality: "bilateral",
+      body_part: "chest",
       memo: "胸部の基本種目"
     )
   end
@@ -66,12 +70,14 @@ class ExerciseTest < ActiveSupport::TestCase
   test "cardioタイプの場合lateralityは必ずnilである" do
     @exercise.exercise_type = "cardio"
     @exercise.laterality = nil
+    @exercise.body_part = nil
     assert @exercise.valid?
   end
 
   test "cardioタイプでlateralityが設定されている場合は無効である" do
     @exercise.exercise_type = "cardio"
     @exercise.laterality = "bilateral"
+    @exercise.body_part = nil
     assert_not @exercise.valid?
     assert_includes @exercise.errors.details[:laterality], { error: :present }
   end
@@ -89,8 +95,10 @@ class ExerciseTest < ActiveSupport::TestCase
       exercise.exercise_type = exercise_type
       if exercise_type == "cardio"
         exercise.laterality = nil
+        exercise.body_part = nil
       else
         exercise.laterality = "bilateral"
+        exercise.body_part = "chest"
       end
       assert exercise.valid?, "#{exercise_type}は有効な値であるべき"
     end
@@ -122,7 +130,8 @@ class ExerciseTest < ActiveSupport::TestCase
     exercise = Exercise.new(
       name: "スクワット",
       exercise_type: "strength",
-      laterality: "bilateral"
+      laterality: "bilateral",
+      body_part: "legs"
     )
     assert exercise.valid?
     assert exercise.strength?
@@ -133,7 +142,8 @@ class ExerciseTest < ActiveSupport::TestCase
     exercise = Exercise.new(
       name: "ダンベルカール",
       exercise_type: "strength",
-      laterality: "unilateral"
+      laterality: "unilateral",
+      body_part: "arms"
     )
     assert exercise.valid?
     assert exercise.strength?
@@ -148,5 +158,78 @@ class ExerciseTest < ActiveSupport::TestCase
     assert exercise.valid?
     assert exercise.cardio?
     assert_nil exercise.laterality
+    assert_nil exercise.body_part
+  end
+
+  # body_part関連のテスト
+  test "strengthタイプの場合body_partが必須である" do
+    @exercise.exercise_type = "strength"
+    @exercise.body_part = nil
+    assert_not @exercise.valid?
+    assert_includes @exercise.errors.details[:body_part], { error: :blank }
+  end
+
+  test "cardioタイプの場合body_partは必ずnilである" do
+    @exercise.exercise_type = "cardio"
+    @exercise.laterality = nil
+    @exercise.body_part = nil
+    assert @exercise.valid?
+  end
+
+  test "cardioタイプでbody_partが設定されている場合は無効である" do
+    @exercise.exercise_type = "cardio"
+    @exercise.laterality = nil
+    @exercise.body_part = "chest"
+    assert_not @exercise.valid?
+    assert_includes @exercise.errors.details[:body_part], { error: :present }
+  end
+
+  test "body_partの有効な値を受け入れる" do
+    valid_body_parts = %w[legs back shoulders arms chest]
+
+    valid_body_parts.each do |body_part|
+      exercise = @exercise.dup
+      exercise.body_part = body_part
+      assert exercise.valid?, "#{body_part}は有効な値であるべき"
+    end
+  end
+
+  test "無効なbody_partを拒否する" do
+    assert_raises(ArgumentError) do
+      @exercise.body_part = "invalid_body_part"
+    end
+  end
+
+  test "各部位の筋力トレーニング例" do
+    body_parts_examples = {
+      "legs" => "スクワット",
+      "back" => "プルアップ",
+      "shoulders" => "ショルダープレス",
+      "arms" => "ダンベルカール",
+      "chest" => "ベンチプレス"
+    }
+
+    body_parts_examples.each do |body_part, name|
+      exercise = Exercise.new(
+        name: name,
+        exercise_type: "strength",
+        laterality: "bilateral",
+        body_part: body_part
+      )
+      assert exercise.valid?, "#{body_part}の筋力トレーニングは有効であるべき"
+      assert exercise.strength?
+      assert_equal body_part, exercise.body_part
+    end
+  end
+
+  test "部位別検索が可能である" do
+    # このテストはマイグレーション後に有効になる想定
+    skip "マイグレーション実行後に有効化"
+
+    chest_exercises = Exercise.where(body_part: :chest)
+    legs_exercises = Exercise.where(body_part: :legs)
+
+    assert_respond_to chest_exercises, :each
+    assert_respond_to legs_exercises, :each
   end
 end
