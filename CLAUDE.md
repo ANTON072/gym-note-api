@@ -105,23 +105,6 @@ bundle exec rubocop
 bundle exec brakeman
 ```
 
-### Git Hooks セットアップ
-
-このプロジェクトでは Lefthook を使用してコミット前の自動チェックを行います。
-
-```bash
-# 初回セットアップ時のみ実行
-bundle exec lefthook install
-
-# フック動作確認
-bundle exec lefthook run pre-commit
-```
-
-Lefthook により以下が自動実行されます：
-
-- コミット前：RuboCop チェック、trailing whitespace 修正、final newline 追加
-- プッシュ前：テスト実行
-
 ### データベース操作
 
 ```bash
