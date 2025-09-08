@@ -20,3 +20,7 @@ ja:
           attributes:
             performed_end_at:
               must_be_after_start_time: "は開始時刻より後に設定してください"
+        exercise:
+          attributes:
+            laterality:
+              cardio_cannot_have_laterality: "有酸素運動の場合、実施形態は設定できません"
