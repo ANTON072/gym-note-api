@@ -12,8 +12,7 @@ class AddBodyPartToExercises < ActiveRecord::Migration[8.0]
     # 既存のstrengthタイプのレコードにデフォルト値を設定します
     TmpExercise.where(exercise_type: :strength).update_all(body_part: TmpExercise.body_parts[:chest])
 
-    add_index :exercises, :body_part
-    add_index :exercises, [ :exercise_type, :body_part ]
+    add_index :exercises, [ :body_part, :exercise_type ]
 
     # exercise_typeがstrengthの場合、body_partはNULLにできないように制約を追加
     strength_value = TmpExercise.exercise_types[:strength]
@@ -27,8 +26,7 @@ class AddBodyPartToExercises < ActiveRecord::Migration[8.0]
   def down
     remove_check_constraint :exercises, name: "exercises_body_part_null_for_cardio"
     remove_check_constraint :exercises, name: "exercises_body_part_not_null_for_strength"
-    remove_index :exercises, name: :index_exercises_on_exercise_type_and_body_part
-    remove_index :exercises, name: :index_exercises_on_body_part
+    remove_index :exercises, column: [ :body_part, :exercise_type ]
     remove_column :exercises, :body_part
   end
 end

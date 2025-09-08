@@ -13,9 +13,8 @@
 #
 # Indexes
 #
-#  index_exercises_on_body_part                    (body_part)
+#  index_exercises_on_body_part_and_exercise_type  (body_part,exercise_type)
 #  index_exercises_on_exercise_type                (exercise_type)
-#  index_exercises_on_exercise_type_and_body_part  (exercise_type,body_part)
 #  index_exercises_on_name                         (name) UNIQUE
 #
 require "test_helper"
