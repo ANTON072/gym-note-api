@@ -15,11 +15,13 @@ class AddBodyPartToExercises < ActiveRecord::Migration[8.0]
     add_index :exercises, :body_part
     add_index :exercises, [ :exercise_type, :body_part ]
 
-    # exercise_typeがstrength(0)の場合、body_partはNULLにできないように制約を追加
-    add_check_constraint :exercises, "exercise_type != 0 OR body_part IS NOT NULL", name: "exercises_body_part_not_null_for_strength"
+    # exercise_typeがstrengthの場合、body_partはNULLにできないように制約を追加
+    strength_value = TmpExercise.exercise_types[:strength]
+    add_check_constraint :exercises, "exercise_type != #{strength_value} OR body_part IS NOT NULL", name: "exercises_body_part_not_null_for_strength"
 
-    # exercise_typeがcardio(1)の場合、body_partはNULLでなければならないように制約を追加
-    add_check_constraint :exercises, "exercise_type != 1 OR body_part IS NULL", name: "exercises_body_part_null_for_cardio"
+    # exercise_typeがcardioの場合、body_partはNULLでなければならないように制約を追加
+    cardio_value = TmpExercise.exercise_types[:cardio]
+    add_check_constraint :exercises, "exercise_type != #{cardio_value} OR body_part IS NULL", name: "exercises_body_part_null_for_cardio"
   end
 
   def down
