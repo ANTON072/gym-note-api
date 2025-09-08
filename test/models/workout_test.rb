@@ -100,7 +100,7 @@ class WorkoutTest < ActiveSupport::TestCase
       performed_start_at: Time.current,
       total_volume: 1000
     )
-    assert_difference 'Workout.count', -1 do
+    assert_difference "Workout.count", -1 do
       @user.destroy
     end
   end
