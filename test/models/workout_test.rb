@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: workouts
+#
+#  id                 :bigint           not null, primary key
+#  memo               :text(65535)
+#  performed_end_at   :datetime
+#  performed_start_at :datetime         not null
+#  total_volume       :integer          default(0), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  user_id            :bigint           not null
+#
+# Indexes
+#
+#  index_workouts_on_user_id  (user_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
+#
 require "test_helper"
 
 class WorkoutTest < ActiveSupport::TestCase
@@ -23,7 +44,7 @@ class WorkoutTest < ActiveSupport::TestCase
       total_volume: 1000
     )
     assert_not workout.valid?
-    assert_includes workout.errors[:user], "を入力してください"
+    assert_includes workout.errors.details[:user], { error: :blank }
   end
 
   test "performed_start_atは必須である" do
@@ -33,7 +54,7 @@ class WorkoutTest < ActiveSupport::TestCase
       total_volume: 1000
     )
     assert_not workout.valid?
-    assert_includes workout.errors[:performed_start_at], "を入力してください"
+    assert_includes workout.errors.details[:performed_start_at], { error: :blank }
   end
 
   test "performed_end_atは省略可能である" do
@@ -61,7 +82,7 @@ class WorkoutTest < ActiveSupport::TestCase
       total_volume: -100
     )
     assert_not workout.valid?
-    assert_includes workout.errors[:total_volume], "は0以上の値にしてください"
+    assert_includes workout.errors.details[:total_volume], { error: :greater_than_or_equal_to, count: 0 }
   end
 
   test "performed_end_atはperformed_start_at以降でなければならない" do
@@ -71,7 +92,7 @@ class WorkoutTest < ActiveSupport::TestCase
       performed_end_at: 1.hour.ago
     )
     assert_not workout.valid?
-    assert_includes workout.errors[:performed_end_at], "は開始時刻より後に設定してください"
+    assert_includes workout.errors.details[:performed_end_at], { error: :must_be_after_start_time }
   end
 
   test "memoは省略可能である" do
