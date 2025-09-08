@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_08_074249) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_08_082419) do
   create_table "exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "exercise_type", null: false
@@ -31,4 +31,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_074249) do
     t.datetime "updated_at", null: false
     t.index ["firebase_uid"], name: "index_users_on_firebase_uid", unique: true
   end
+
+  create_table "workouts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "performed_start_at"
+    t.datetime "performed_end_at"
+    t.integer "total_volume"
+    t.text "memo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_workouts_on_user_id"
+  end
+
+  add_foreign_key "workouts", "users"
 end
