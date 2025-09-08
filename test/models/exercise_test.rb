@@ -85,13 +85,14 @@ class ExerciseTest < ActiveSupport::TestCase
     valid_exercise_types = %w[strength cardio]
 
     valid_exercise_types.each do |exercise_type|
-      @exercise.exercise_type = exercise_type
+      exercise = @exercise.dup
+      exercise.exercise_type = exercise_type
       if exercise_type == "cardio"
-        @exercise.laterality = nil
+        exercise.laterality = nil
       else
-        @exercise.laterality = "bilateral"
+        exercise.laterality = "bilateral"
       end
-      assert @exercise.valid?, "#{exercise_type}は有効な値であるべき"
+      assert exercise.valid?, "#{exercise_type}は有効な値であるべき"
     end
   end
 
@@ -99,8 +100,9 @@ class ExerciseTest < ActiveSupport::TestCase
     valid_lateralities = %w[bilateral unilateral]
 
     valid_lateralities.each do |laterality|
-      @exercise.laterality = laterality
-      assert @exercise.valid?, "#{laterality}は有効な値であるべき"
+      exercise = @exercise.dup
+      exercise.laterality = laterality
+      assert exercise.valid?, "#{laterality}は有効な値であるべき"
     end
   end
 
