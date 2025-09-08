@@ -13,6 +13,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **I18nファイルの活用**: `config/locales/ja.yml`にエラーメッセージを定義し、`errors.add(:field, :error_key)`の形式で使用する
 - **テストの堅牢性**: テストではエラーメッセージの文字列ではなく、`errors.details`を使用してエラーの種類（シンボル）を検証する
 
+### enumの定義とマジックナンバー回避
+- **Rails 7以降のenum定義**: `enum :name, { key: value }` の形式を使用する（第一引数にシンボルを渡す）
+  ```ruby
+  # Rails 7以降の正しい記法
+  enum :exercise_type, { strength: 0, cardio: 1 }
+  
+  # 古い記法（Rails 6以前）- 使用しない
+  enum exercise_type: { strength: 0, cardio: 1 }
+  ```
+- **マジックナンバーの回避**: 数値を直接使用せず、enumのシンボルや定数を使用する
+  ```ruby
+  # 悪い例
+  Exercise.where(exercise_type: 0)
+  
+  # 良い例
+  Exercise.where(exercise_type: :strength)
+  ```
+- **マイグレーション内でのenum使用**: 一時モデルでenumを定義して可読性を向上
+  ```ruby
+  class TmpExercise < ApplicationRecord
+    self.table_name = 'exercises'
+    enum :exercise_type, { strength: 0, cardio: 1 }
+  end
+  
+  TmpExercise.where(exercise_type: :strength).update_all(body_part: TmpExercise.body_parts[:chest])
+  ```
+- **テストでの動的enum参照**: ハードコードせずに`Model.enum_name.keys`を使用
+  ```ruby
+  Exercise.body_parts.keys.each do |body_part|
+    # テスト実行
+  end
+  ```
+
 ## アプリケーションアーキテクチャ
 
 このプロジェクトは筋力トレーニングの記録管理を行う Rails 8.0.2 API サーバーです。

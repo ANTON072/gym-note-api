@@ -24,3 +24,5 @@ ja:
           attributes:
             laterality:
               cardio_cannot_have_laterality: "有酸素運動の場合、実施形態は設定できません"
+            body_part:
+              cardio_cannot_have_body_part: "有酸素運動の場合、部位は設定できません"
