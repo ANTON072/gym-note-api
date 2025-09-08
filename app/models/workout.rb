@@ -17,7 +17,7 @@ class Workout < ApplicationRecord
     return unless performed_start_at && performed_end_at
 
     if performed_end_at <= performed_start_at
-      errors.add(:performed_end_at, "must be after start time")
+      errors.add(:performed_end_at, "は開始時刻より後に設定してください")
     end
   end
 end

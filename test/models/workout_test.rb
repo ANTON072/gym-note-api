@@ -71,7 +71,7 @@ class WorkoutTest < ActiveSupport::TestCase
       performed_end_at: 1.hour.ago
     )
     assert_not workout.valid?
-    assert_includes workout.errors[:performed_end_at], "must be after start time"
+    assert_includes workout.errors[:performed_end_at], "は開始時刻より後に設定してください"
   end
 
   test "memoは省略可能である" do
