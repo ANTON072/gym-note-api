@@ -179,9 +179,7 @@ class ExerciseTest < ActiveSupport::TestCase
   end
 
   test "body_partの有効な値を受け入れる" do
-    valid_body_parts = %w[legs back shoulders arms chest]
-
-    valid_body_parts.each do |body_part|
+    Exercise.body_parts.keys.each do |body_part|
       exercise = @exercise.dup
       exercise.body_part = body_part
       assert exercise.valid?, "#{body_part}は有効な値であるべき"
