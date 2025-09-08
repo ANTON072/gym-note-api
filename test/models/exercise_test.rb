@@ -67,7 +67,7 @@ class ExerciseTest < ActiveSupport::TestCase
     assert_includes @exercise.errors.details[:laterality], { error: :blank }
   end
 
-  test "cardioタイプの場合lateralityは必ずnilである" do
+  test "cardioタイプは有効である" do
     @exercise.exercise_type = "cardio"
     @exercise.laterality = nil
     @exercise.body_part = nil
@@ -169,12 +169,6 @@ class ExerciseTest < ActiveSupport::TestCase
     assert_includes @exercise.errors.details[:body_part], { error: :blank }
   end
 
-  test "cardioタイプの場合body_partは必ずnilである" do
-    @exercise.exercise_type = "cardio"
-    @exercise.laterality = nil
-    @exercise.body_part = nil
-    assert @exercise.valid?
-  end
 
   test "cardioタイプでbody_partが設定されている場合は無効である" do
     @exercise.exercise_type = "cardio"
@@ -211,7 +205,7 @@ class ExerciseTest < ActiveSupport::TestCase
 
     body_parts_examples.each do |body_part, name|
       exercise = Exercise.new(
-        name: name,
+        name: "#{name}-#{body_part}",
         exercise_type: "strength",
         laterality: "bilateral",
         body_part: body_part
@@ -223,13 +217,15 @@ class ExerciseTest < ActiveSupport::TestCase
   end
 
   test "部位別検索が可能である" do
-    # このテストはマイグレーション後に有効になる想定
-    skip "マイグレーション実行後に有効化"
+    @exercise.save! # body_part: 'chest'
+    Exercise.create!(name: "スクワット-テスト", exercise_type: "strength", laterality: "bilateral", body_part: "legs")
 
     chest_exercises = Exercise.where(body_part: :chest)
-    legs_exercises = Exercise.where(body_part: :legs)
+    assert_equal 1, chest_exercises.count
+    assert_equal "ベンチプレス", chest_exercises.first.name
 
-    assert_respond_to chest_exercises, :each
-    assert_respond_to legs_exercises, :each
+    legs_exercises = Exercise.where(body_part: :legs)
+    assert_equal 1, legs_exercises.count
+    assert_equal "スクワット-テスト", legs_exercises.first.name
   end
 end
