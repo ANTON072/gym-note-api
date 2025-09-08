@@ -192,17 +192,9 @@ class ExerciseTest < ActiveSupport::TestCase
   end
 
   test "各部位の筋力トレーニング例" do
-    body_parts_examples = {
-      "legs" => "スクワット",
-      "back" => "プルアップ",
-      "shoulders" => "ショルダープレス",
-      "arms" => "ダンベルカール",
-      "chest" => "ベンチプレス"
-    }
-
-    body_parts_examples.each do |body_part, name|
+    Exercise.body_parts.each_key do |body_part|
       exercise = Exercise.new(
-        name: "#{name}-#{body_part}",
+        name: "Test exercise for #{body_part}",
         exercise_type: "strength",
         laterality: "bilateral",
         body_part: body_part
