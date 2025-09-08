@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## コーディング規約
+
+### テストの記述
+- テストの記述（test名、アサーションメッセージなど）は日本語で書く
+- 変数名やメソッド名は英語のまま
+
 ## アプリケーションアーキテクチャ
 
 このプロジェクトは筋力トレーニングの記録管理を行う Rails 8.0.2 API サーバーです。
