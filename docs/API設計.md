@@ -20,7 +20,6 @@
 ### ホーム
 
 - 今日のワークアウトを新規入力・編集・削除ができる。
-- 今日の体重を入力できる。
 - 前回のワークアウトが見られる。1 ページ 10 件。
 - ページングがある（Next/Prev）。
 - ワークアウトを検索ができる。
@@ -30,7 +29,6 @@
 
 - 種目別の最大挙上重量を一覧できる。
 - 種目別のトレーニング強度の推移を Chart で見られる。
-- 自分の体重の推移を Chart で見られる。
 
 ### 設定
 
@@ -68,11 +66,6 @@ Rails の単一テーブル継承（STI）を使用：
   - 総負荷量 = Σ(各セットの重量 × レップ数)
   - ダンベル種目の場合: 総負荷量 = Σ(片方の重量 × 2 × レップ数)
   - 片方ずつやる種目の場合: 総負荷量 = Σ(重量 × (左レップ数 + 右レップ数))
-
-### 体重
-
-- 体重はグラム単位で登録
-- 日ごとに登録が可能。
 
 ## ドメインモデル詳細
 
@@ -131,17 +124,6 @@ Rails の単一テーブル継承（STI）を使用：
 | order               | integer  | セット順                                      |
 | created_at          | datetime | 作成日時（UTC）                               |
 | updated_at          | datetime | 更新日時（UTC）                               |
-
-### Weight
-
-| フィールド  | 型       | 説明            |
-| ----------- | -------- | --------------- |
-| id          | integer  | 主キー          |
-| user_id     | integer  | ユーザー ID     |
-| recorded_at | datetime | 記録日時（UTC） |
-| weight      | integer  | 体重（グラム）  |
-| created_at  | datetime | 作成日時（UTC） |
-| updated_at  | datetime | 更新日時（UTC） |
 
 ## API エンドポイント詳細
 
@@ -291,45 +273,6 @@ DELETE /workouts/:id
 
 ```
 
-### 体重
-
-#### 体重履歴取得
-
-```
-
-GET /weights?start_date=2024-01-01&end_date=2024-01-31
-
-````
-
-**レスポンス**
-
-```json
-{
-  "weights": [
-    {
-      "id": 1,
-      "recorded_at": "2024-01-15T08:00:00Z",
-      "weight": 70000
-    }
-  ]
-}
-````
-
-#### 体重登録・更新
-
-```
-POST /weights
-```
-
-**リクエスト**
-
-```json
-{
-  "recorded_at": "2024-01-15T08:00:00Z",
-  "weight": 70000
-}
-```
-
 ### レコード
 
 #### 種目別最大挙上重量
@@ -379,25 +322,6 @@ GET /records/exercise-trends/:exercise_id?start_date=2024-01-01&end_date=2024-01
 }
 ```
 
-#### 体重推移
-
-```
-GET /records/weight-trends?start_date=2024-01-01&end_date=2024-01-31
-```
-
-**レスポンス**
-
-```json
-{
-  "trends": [
-    {
-      "recorded_at": "2024-01-15T08:00:00Z",
-      "weight": 70000
-    }
-  ]
-}
-```
-
 ### 種目マスタ
 
 #### 種目一覧取得
@@ -442,5 +366,5 @@ DELETE /users/me
 - 認証が必要なエンドポイントは Authorization ヘッダーに Bearer トークンを付与
 - 日付形式は ISO 8601 形式（日付：YYYY-MM-DD、日時：YYYY-MM-DDTHH:MM:SSZ）
 - 日時は UTC で保存、レスポンスも UTC
-- 重量・体重はグラム単位の整数
+- 重量はグラム単位の整数
 - ページネーションは page/per_page パラメータで制御
