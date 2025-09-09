@@ -20,7 +20,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   assert_includes workout_exercise.errors.details[:workout], { error: :blank }
   
   # 値を含む場合
-  assert_includes workout_exercise.errors.details[:order_index], { error: :greater_than_or_equal_to, value: 0, count: 1 }
+  assert_includes workout_exercise.errors.details[:order_index], { error: :greater_than_or_equal_to, count: 1 }
   
   # ユニーク制約違反の場合
   assert_includes workout_exercise.errors.details[:exercise_id], { error: :taken, value: @exercise.id }

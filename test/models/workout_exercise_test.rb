@@ -16,7 +16,7 @@
 #  index_workout_exercises_on_exercise_id                 (exercise_id)
 #  index_workout_exercises_on_workout_id                  (workout_id)
 #  index_workout_exercises_on_workout_id_and_exercise_id  (workout_id,exercise_id) UNIQUE
-#  index_workout_exercises_on_workout_id_and_order_index  (workout_id,order_index)
+#  index_workout_exercises_on_workout_id_and_order_index  (workout_id,order_index) UNIQUE
 #
 # Foreign Keys
 #
@@ -87,7 +87,7 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
       order_index: 0
     )
     assert_not workout_exercise.valid?
-    assert_includes workout_exercise.errors.details[:order_index], { error: :greater_than_or_equal_to, value: 0, count: 1 }
+    assert_includes workout_exercise.errors.details[:order_index], { error: :greater_than_or_equal_to, count: 1 }
   end
 
   test "order_indexは整数でなければならない" do
@@ -100,7 +100,7 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
     assert_includes workout_exercise.errors.details[:order_index], { error: :not_an_integer, value: 1.5 }
   end
 
-  test "同じworkout内でorder_indexの重複は許可される" do
+  test "同じworkout内でorder_indexの重複は許可されない" do
     WorkoutExercise.create!(
       workout: @workout,
       exercise: @exercise,
@@ -119,7 +119,8 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
       exercise: another_exercise,
       order_index: 1
     )
-    assert workout_exercise.valid?
+    assert_not workout_exercise.valid?
+    assert_includes workout_exercise.errors.details[:order_index], { error: :taken, value: 1 }
   end
 
   test "異なるworkoutでは同じexerciseを使用できる" do

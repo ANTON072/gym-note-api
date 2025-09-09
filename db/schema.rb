@@ -46,7 +46,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
     t.datetime "updated_at", null: false
     t.index ["exercise_id"], name: "index_workout_exercises_on_exercise_id"
     t.index ["workout_id", "exercise_id"], name: "index_workout_exercises_on_workout_id_and_exercise_id", unique: true
-    t.index ["workout_id", "order_index"], name: "index_workout_exercises_on_workout_id_and_order_index"
+    t.index ["workout_id", "order_index"], name: "index_workout_exercises_on_workout_id_and_order_index", unique: true
     t.index ["workout_id"], name: "index_workout_exercises_on_workout_id"
   end
 
