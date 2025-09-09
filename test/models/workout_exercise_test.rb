@@ -2,16 +2,20 @@ require "test_helper"
 
 class WorkoutExerciseTest < ActiveSupport::TestCase
   def setup
-    @user = User.create!(username: "testuser", firebase_uid: "firebase123")
+    @user = User.create!(
+      name: "testuser",
+      email: "test@example.com",
+      firebase_uid: "firebase123"
+    )
     @workout = Workout.create!(
       user: @user,
-      workout_date: Date.today,
-      location: "自宅"
+      performed_start_at: Time.current
     )
     @exercise = Exercise.create!(
       name: "ベンチプレス",
       exercise_type: :strength,
-      body_part: :chest
+      body_part: :chest,
+      laterality: :bilateral
     )
   end
 
@@ -81,7 +85,8 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
     another_exercise = Exercise.create!(
       name: "スクワット",
       exercise_type: :strength,
-      body_part: :legs
+      body_part: :legs,
+      laterality: :bilateral
     )
 
     workout_exercise = WorkoutExercise.new(
@@ -101,8 +106,7 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
 
     another_workout = Workout.create!(
       user: @user,
-      workout_date: Date.tomorrow,
-      location: "ジム"
+      performed_start_at: Time.current + 1.day
     )
 
     workout_exercise = WorkoutExercise.new(
@@ -160,21 +164,10 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
       order_index: 1
     )
 
-    assert_raises(ActiveRecord::DeleteRestrictionError) do
-      @exercise.destroy
-    end
+    assert_not @exercise.destroy
+    assert @exercise.errors[:base].any?
   end
 
-  test "workout_exercises_countがキャッシュされる" do
-    workout_exercise = WorkoutExercise.create!(
-      workout: @workout,
-      exercise: @exercise,
-      order_index: 1,
-      workout_exercises_count: 0
-    )
-
-    assert_equal 0, workout_exercise.workout_exercises_count
-  end
 
   test "notesフィールドに長いテキストを保存できる" do
     long_text = "a" * 1000

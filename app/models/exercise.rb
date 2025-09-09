@@ -22,6 +22,8 @@ class Exercise < ApplicationRecord
   enum :laterality, { bilateral: 0, unilateral: 1 }
   enum :body_part, { legs: 0, back: 1, shoulders: 2, arms: 3, chest: 4 }
 
+  has_many :workout_exercises, dependent: :restrict_with_error
+
   validates :name, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :exercise_type, presence: true
   validates :laterality, presence: true, if: :strength?

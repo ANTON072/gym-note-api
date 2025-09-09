@@ -36,6 +36,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
     t.index ["firebase_uid"], name: "index_users_on_firebase_uid", unique: true
   end
 
+  create_table "workout_exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "workout_id", null: false
+    t.bigint "exercise_id", null: false
+    t.integer "order_index", null: false
+    t.integer "total_volume", default: 0, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["exercise_id"], name: "index_workout_exercises_on_exercise_id"
+    t.index ["workout_id", "exercise_id"], name: "index_workout_exercises_on_workout_id_and_exercise_id", unique: true
+    t.index ["workout_id", "order_index"], name: "index_workout_exercises_on_workout_id_and_order_index"
+    t.index ["workout_id"], name: "index_workout_exercises_on_workout_id"
+  end
+
   create_table "workouts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "performed_start_at", null: false
@@ -47,5 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
+  add_foreign_key "workout_exercises", "exercises"
+  add_foreign_key "workout_exercises", "workouts"
   add_foreign_key "workouts", "users"
 end
