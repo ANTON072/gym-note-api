@@ -13,6 +13,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **I18nファイルの活用**: `config/locales/ja.yml`にエラーメッセージを定義し、`errors.add(:field, :error_key)`の形式で使用する
 - **テストの堅牢性**: テストではエラーメッセージの文字列ではなく、`errors.details`を使用してエラーの種類（シンボル）を検証する
 
+### バリデーションエラーのテスト記法
+- **assert_includes を使用**: バリデーションエラーの検証には必ず `assert_includes` と `errors.details` を組み合わせて使用する
+  ```ruby
+  # 基本的な記法
+  assert_includes workout_exercise.errors.details[:workout], { error: :blank }
+  
+  # 値を含む場合
+  assert_includes workout_exercise.errors.details[:order_index], { error: :greater_than_or_equal_to, count: 1 }
+  
+  # ユニーク制約違反の場合
+  assert_includes workout_exercise.errors.details[:exercise_id], { error: :taken, value: @exercise.id }
+  ```
+- **文字列での検証は避ける**: `assert_includes workout.errors[:field], "エラーメッセージ"` の形式は使用しない
+
 ### enumの定義とマジックナンバー回避
 - **Rails 7以降のenum定義**: `enum :name, { key: value }` の形式を使用する（第一引数にシンボルを渡す）
   ```ruby

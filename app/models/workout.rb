@@ -21,6 +21,7 @@
 #
 class Workout < ApplicationRecord
   belongs_to :user
+  has_many :workout_exercises, dependent: :destroy
 
   validates :performed_start_at, presence: true
   validates :total_volume, numericality: { greater_than_or_equal_to: 0 }
