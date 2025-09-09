@@ -87,7 +87,7 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
       order_index: 0
     )
     assert_not workout_exercise.valid?
-    assert_includes workout_exercise.errors.details[:order_index], { error: :greater_than_or_equal_to, count: 1 }
+    assert_includes workout_exercise.errors.details[:order_index], { error: :greater_than_or_equal_to, value: 0, count: 1 }
   end
 
   test "order_indexは整数でなければならない" do
