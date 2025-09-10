@@ -1,3 +1,30 @@
+# == Schema Information
+#
+# Table name: workout_sets
+#
+#  id                  :bigint           not null, primary key
+#  calories            :integer
+#  duration_seconds    :integer
+#  left_reps           :integer
+#  order_index         :integer          not null
+#  reps                :integer
+#  right_reps          :integer
+#  type                :string(255)      not null
+#  weight              :integer
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  workout_exercise_id :bigint           not null
+#
+# Indexes
+#
+#  index_workout_sets_on_type                                 (type)
+#  index_workout_sets_on_workout_exercise_id                  (workout_exercise_id)
+#  index_workout_sets_on_workout_exercise_id_and_order_index  (workout_exercise_id,order_index) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (workout_exercise_id => workout_exercises.id) ON DELETE => cascade
+#
 require "test_helper"
 
 class CardioSetTest < ActiveSupport::TestCase
@@ -14,7 +41,8 @@ class CardioSetTest < ActiveSupport::TestCase
     @strength_exercise = Exercise.create!(
       name: "ベンチプレス",
       exercise_type: :strength,
-      laterality: :bilateral
+      laterality: :bilateral,
+      body_part: :chest
     )
     @workout = Workout.create!(
       user: @user,

@@ -1,6 +1,6 @@
-class CreateSets < ActiveRecord::Migration[8.0]
+class CreateWorkoutSets < ActiveRecord::Migration[8.0]
   def change
-    create_table :sets do |t|
+    create_table :workout_sets do |t|
       t.references :workout_exercise, null: false, foreign_key: { on_delete: :cascade }
       t.string :type, null: false
       t.integer :weight, null: true
@@ -14,7 +14,7 @@ class CreateSets < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :sets, :type
-    add_index :sets, [ :workout_exercise_id, :order_index ], unique: true
+    add_index :workout_sets, :type
+    add_index :workout_sets, [ :workout_exercise_id, :order_index ], unique: true
   end
 end
