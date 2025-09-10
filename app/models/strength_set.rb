@@ -29,8 +29,7 @@ class StrengthSet < WorkoutSet
   validates :weight, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   # CardioSetのフィールドは使用しない
-  validates :duration_seconds, absence: { message: :present }
-  validates :calories, absence: { message: :present }
+  validates :duration_seconds, :calories, absence: true
 
   # exercise_typeがstrengthであることを確認
   validate :exercise_must_be_strength

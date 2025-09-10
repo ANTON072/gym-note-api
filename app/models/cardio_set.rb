@@ -31,10 +31,7 @@ class CardioSet < WorkoutSet
   validates :calories, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
 
   # StrengthSetのフィールドは使用しない
-  validates :weight, absence: { message: :present }
-  validates :reps, absence: { message: :present }
-  validates :left_reps, absence: { message: :present }
-  validates :right_reps, absence: { message: :present }
+  validates :weight, :reps, :left_reps, :right_reps, absence: true
 
   # exercise_typeがcardioであることを確認
   validate :exercise_must_be_cardio
