@@ -94,7 +94,7 @@ class CardioSetTest < ActiveSupport::TestCase
       duration_seconds: 0
     )
     assert_not set.valid?
-    assert_includes set.errors.details[:duration_seconds], { error: :greater_than_or_equal_to, count: 1 }
+    assert_includes set.errors.details[:duration_seconds], { error: :greater_than_or_equal_to, value: 0, count: 1 }
   end
 
   test "caloriesが設定される場合は0以上" do
@@ -104,7 +104,7 @@ class CardioSetTest < ActiveSupport::TestCase
       calories: -10
     )
     assert_not set.valid?
-    assert_includes set.errors.details[:calories], { error: :greater_than_or_equal_to, count: 0 }
+    assert_includes set.errors.details[:calories], { error: :greater_than_or_equal_to, value: -10, count: 0 }
   end
 
   test "正常なCardioSetの作成（両方の値あり）" do

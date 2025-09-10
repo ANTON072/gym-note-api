@@ -81,7 +81,7 @@ class StrengthSetTest < ActiveSupport::TestCase
       reps: 10
     )
     assert_not set.valid?
-    assert_includes set.errors.details[:weight], { error: :greater_than_or_equal_to, count: 0 }
+    assert_includes set.errors.details[:weight], { error: :greater_than_or_equal_to, value: -100, count: 0 }
   end
 
   # bilateral（両側）の場合のテスト
@@ -103,7 +103,7 @@ class StrengthSetTest < ActiveSupport::TestCase
       reps: 0
     )
     assert_not set.valid?
-    assert_includes set.errors.details[:reps], { error: :greater_than_or_equal_to, count: 1 }
+    assert_includes set.errors.details[:reps], { error: :greater_than_or_equal_to, value: 0, count: 1 }
   end
 
   test "bilateralの場合はleft_repsが設定されていたらエラー" do
@@ -172,7 +172,7 @@ class StrengthSetTest < ActiveSupport::TestCase
       right_reps: 10
     )
     assert_not set.valid?
-    assert_includes set.errors.details[:left_reps], { error: :greater_than_or_equal_to, count: 0 }
+    assert_includes set.errors.details[:left_reps], { error: :greater_than_or_equal_to, value: -1, count: 0 }
   end
 
   test "unilateralの場合はright_repsが0以上" do
@@ -184,7 +184,7 @@ class StrengthSetTest < ActiveSupport::TestCase
       right_reps: -1
     )
     assert_not set.valid?
-    assert_includes set.errors.details[:right_reps], { error: :greater_than_or_equal_to, count: 0 }
+    assert_includes set.errors.details[:right_reps], { error: :greater_than_or_equal_to, value: -1, count: 0 }
   end
 
   test "unilateralの場合はrepsが設定されていたらエラー" do

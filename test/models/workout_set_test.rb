@@ -84,7 +84,7 @@ class WorkoutSetTest < ActiveSupport::TestCase
       order_index: 0
     )
     assert_not set.valid?
-    assert_includes set.errors.details[:order_index], { error: :greater_than_or_equal_to, count: 1 }
+    assert_includes set.errors.details[:order_index], { error: :greater_than_or_equal_to, value: 0, count: 1 }
   end
 
   test "workout_exerciseの必須バリデーション" do
