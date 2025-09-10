@@ -284,7 +284,7 @@ class StrengthSetTest < ActiveSupport::TestCase
     assert_equal 0, set.reload.volume
   end
 
-  test "bilateralでrepsがnilの場合volumeは0" do
+  test "bilateralでrepsがnilの場合はバリデーションエラーになる" do
     set = StrengthSet.new(
       workout_exercise: @bilateral_workout_exercise,
       order_index: 1,
