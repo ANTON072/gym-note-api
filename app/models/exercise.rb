@@ -20,7 +20,7 @@
 class Exercise < ApplicationRecord
   enum :exercise_type, { strength: 0, cardio: 1 }
   enum :laterality, { bilateral: 0, unilateral: 1 }
-  enum :body_part, { legs: 0, back: 1, shoulders: 2, arms: 3, chest: 4 }
+  enum :body_part, { legs: 0, back: 1, shoulders: 2, arms: 3, chest: 4, full_body: 5 }
 
   has_many :workout_exercises, dependent: :restrict_with_error
 

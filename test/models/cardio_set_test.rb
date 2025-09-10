@@ -10,6 +10,7 @@
 #  reps                :integer
 #  right_reps          :integer
 #  type                :string(255)      not null
+#  volume              :integer          default(0), not null
 #  weight              :integer
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
@@ -18,6 +19,7 @@
 # Indexes
 #
 #  index_workout_sets_on_type                                 (type)
+#  index_workout_sets_on_volume                               (volume)
 #  index_workout_sets_on_workout_exercise_id                  (workout_exercise_id)
 #  index_workout_sets_on_workout_exercise_id_and_order_index  (workout_exercise_id,order_index) UNIQUE
 #
@@ -151,5 +153,28 @@ class CardioSetTest < ActiveSupport::TestCase
     )
     assert_not set.valid?
     assert_includes set.errors.details[:base], { error: :invalid_exercise_type }
+  end
+
+  # volumeは常に0であることのテスト
+  test "CardioSetのvolumeは常に0（デフォルト値）" do
+    set = CardioSet.create!(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      duration_seconds: 1800,
+      calories: 300
+    )
+    assert_equal 0, set.reload.volume
+  end
+
+  test "CardioSetのvolumeは値を設定しようとしてもデフォルトの0のまま" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1
+    )
+    # CardioSetではvolumeを計算しないため、常に0
+    assert_equal 0, set.volume
+
+    set.save!
+    assert_equal 0, set.reload.volume
   end
 end

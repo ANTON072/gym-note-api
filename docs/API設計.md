@@ -9,7 +9,7 @@
 - API は軽量な状態を保つ
 - 日時は UTC で DB に保存し、フロントエンドで JST に変換
 - RESTful な設計を基本とする
-- 総負荷量など、集計に使用する値は DB に保存してパフォーマンスを確保
+- 総負荷量は workout_sets.volume カラムから SQL で動的に集計
 
 ## 画面の機能要件
 
@@ -62,10 +62,10 @@ Rails の単一テーブル継承（STI）を使用：
 ### ワークアウト（その日にやったトレーニング）
 
 - WorkoutExercise が複数登録が可能
-- WorkoutExercise ごとに「総負荷量」を DB に保存
-  - 総負荷量 = Σ(各セットの重量 × レップ数)
-  - ダンベル種目の場合: 総負荷量 = Σ(片方の重量 × 2 × レップ数)
-  - 片方ずつやる種目の場合: 総負荷量 = Σ(重量 × (左レップ数 + 右レップ数))
+- 総負荷量は workout_sets.volume から動的に集計
+  - セット毎の volume は保存時に自動計算
+  - bilateral（両側）の場合: volume = weight × reps
+  - unilateral（片側）の場合: volume = weight × (left_reps + right_reps)
 
 ## ドメインモデル詳細
 
@@ -91,7 +91,6 @@ Rails の単一テーブル継承（STI）を使用：
 | user_id            | integer  | ユーザー ID                 |
 | performed_start_at | datetime | ワークアウト開始日時（UTC） |
 | performed_end_at   | datetime | ワークアウト終了日時（UTC） |
-| total_volume       | integer  | 総負荷量（グラム）          |
 | memo               | text     | メモ                        |
 | created_at         | datetime | 作成日時（UTC）             |
 | updated_at         | datetime | 更新日時（UTC）             |
@@ -103,12 +102,12 @@ Rails の単一テーブル継承（STI）を使用：
 | id           | integer  | 主キー                                        |
 | workout_id   | integer  | ワークアウト ID                               |
 | exercise_id  | integer  | 種目 ID                                       |
-| order        | integer  | 表示順（exercises 配列の index から自動設定） |
-| total_volume | integer  | この種目の総負荷量（グラム）                  |
+| order_index  | integer  | 表示順（exercises 配列の index から自動設定） |
+| notes        | text     | メモ                                          |
 | created_at   | datetime | 作成日時（UTC）                               |
 | updated_at   | datetime | 更新日時（UTC）                               |
 
-### Set（単一テーブル継承）
+### WorkoutSet（単一テーブル継承）
 
 | フィールド          | 型       | 説明                                          |
 | ------------------- | -------- | --------------------------------------------- |
@@ -121,7 +120,8 @@ Rails の単一テーブル継承（STI）を使用：
 | right_reps          | integer  | 右側レップ数（片方ずつの種目）※StrengthSet 用 |
 | duration_seconds    | integer  | 実施時間（秒）※CardioSet 用                   |
 | calories            | integer  | 消費カロリー（kcal）※CardioSet 用             |
-| order               | integer  | セット順                                      |
+| order_index         | integer  | セット順                                      |
+| volume              | integer  | 負荷量（グラム）※StrengthSet 用自動計算       |
 | created_at          | datetime | 作成日時（UTC）                               |
 | updated_at          | datetime | 更新日時（UTC）                               |
 
@@ -187,13 +187,12 @@ GET /workouts?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=10
             "is_cardio": false,
             "memo": null
           },
-          "total_volume": 1000000,
           "sets": [
             {
               "id": 1,
               "weight": 60000,
               "reps": 10,
-              "order": 1,
+              "order_index": 1,
               "type": "StrengthSet"
             }
           ]

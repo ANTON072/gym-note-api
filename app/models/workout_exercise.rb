@@ -2,14 +2,13 @@
 #
 # Table name: workout_exercises
 #
-#  id           :bigint           not null, primary key
-#  notes        :text(65535)
-#  order_index  :integer          not null
-#  total_volume :integer          default(0), not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  exercise_id  :bigint           not null
-#  workout_id   :bigint           not null
+#  id          :bigint           not null, primary key
+#  notes       :text(65535)
+#  order_index :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  exercise_id :bigint           not null
+#  workout_id  :bigint           not null
 #
 # Indexes
 #
@@ -30,8 +29,12 @@ class WorkoutExercise < ApplicationRecord
   alias_method :sets, :workout_sets
 
   validates :order_index, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, uniqueness: { scope: :workout_id }
-  validates :total_volume, numericality: { greater_than_or_equal_to: 0 }
   validates :exercise_id, uniqueness: { scope: :workout_id }
+
+  # 総負荷量を動的に集計
+  def total_volume
+    workout_sets.where(type: "StrengthSet").sum(:volume)
+  end
 
   # exercise_typeに応じたSetサブクラスをbuild
   def build_set(attributes = {})
