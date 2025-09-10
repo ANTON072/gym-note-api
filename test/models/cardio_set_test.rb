@@ -29,31 +29,16 @@ require "test_helper"
 
 class CardioSetTest < ActiveSupport::TestCase
   setup do
-    @user = User.create!(
-      firebase_uid: "test_uid_#{SecureRandom.hex(10)}",
-      email: "test_#{SecureRandom.hex(10)}@example.com",
-      name: "テストユーザー"
-    )
-    @cardio_exercise = Exercise.create!(
-      name: "トレッドミル",
-      exercise_type: :cardio
-    )
-    @strength_exercise = Exercise.create!(
-      name: "ベンチプレス",
-      exercise_type: :strength,
-      laterality: :bilateral,
-      body_part: :chest
-    )
-    @workout = Workout.create!(
-      user: @user,
-      performed_start_at: Time.current
-    )
-    @cardio_workout_exercise = WorkoutExercise.create!(
+    @user = create_test_user
+    @cardio_exercise = create_cardio_exercise
+    @strength_exercise = create_bilateral_exercise
+    @workout = create_test_workout(user: @user)
+    @cardio_workout_exercise = create_workout_exercise(
       workout: @workout,
       exercise: @cardio_exercise,
       order_index: 1
     )
-    @strength_workout_exercise = WorkoutExercise.create!(
+    @strength_workout_exercise = create_workout_exercise(
       workout: @workout,
       exercise: @strength_exercise,
       order_index: 2

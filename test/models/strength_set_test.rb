@@ -29,33 +29,16 @@ require "test_helper"
 
 class StrengthSetTest < ActiveSupport::TestCase
   setup do
-    @user = User.create!(
-      firebase_uid: "test_uid_#{SecureRandom.hex(10)}",
-      email: "test_#{SecureRandom.hex(10)}@example.com",
-      name: "テストユーザー"
-    )
-    @bilateral_exercise = Exercise.create!(
-      name: "ベンチプレス",
-      exercise_type: :strength,
-      laterality: :bilateral,
-      body_part: :chest
-    )
-    @unilateral_exercise = Exercise.create!(
-      name: "ダンベルカール",
-      exercise_type: :strength,
-      laterality: :unilateral,
-      body_part: :arms
-    )
-    @workout = Workout.create!(
-      user: @user,
-      performed_start_at: Time.current
-    )
-    @bilateral_workout_exercise = WorkoutExercise.create!(
+    @user = create_test_user
+    @bilateral_exercise = create_bilateral_exercise
+    @unilateral_exercise = create_unilateral_exercise
+    @workout = create_test_workout(user: @user)
+    @bilateral_workout_exercise = create_workout_exercise(
       workout: @workout,
       exercise: @bilateral_exercise,
       order_index: 1
     )
-    @unilateral_workout_exercise = WorkoutExercise.create!(
+    @unilateral_workout_exercise = create_workout_exercise(
       workout: @workout,
       exercise: @unilateral_exercise,
       order_index: 2
