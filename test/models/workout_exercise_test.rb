@@ -227,4 +227,120 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
     )
     assert workout_exercise.valid?
   end
+
+  # total_volume集計メソッドのテスト
+  test "total_volumeメソッドはStrengthSetのvolumeの合計を返す" do
+    workout_exercise = WorkoutExercise.create!(
+      workout: @workout,
+      exercise: @exercise,
+      order_index: 1
+    )
+
+    # StrengthSetを3つ作成
+    StrengthSet.create!(
+      workout_exercise: workout_exercise,
+      order_index: 1,
+      weight: 60000,
+      reps: 10,
+      volume: 600000
+    )
+    StrengthSet.create!(
+      workout_exercise: workout_exercise,
+      order_index: 2,
+      weight: 60000,
+      reps: 8,
+      volume: 480000
+    )
+    StrengthSet.create!(
+      workout_exercise: workout_exercise,
+      order_index: 3,
+      weight: 60000,
+      reps: 6,
+      volume: 360000
+    )
+
+    assert_equal 1440000, workout_exercise.total_volume
+  end
+
+  test "CardioSetは総負荷量計算に含まれない" do
+    cardio_exercise = Exercise.create!(
+      name: "ランニング",
+      exercise_type: :cardio,
+      body_part: :full_body,
+      laterality: :bilateral
+    )
+    
+    strength_workout_exercise = WorkoutExercise.create!(
+      workout: @workout,
+      exercise: @exercise,
+      order_index: 1
+    )
+    
+    cardio_workout_exercise = WorkoutExercise.create!(
+      workout: @workout,
+      exercise: cardio_exercise,
+      order_index: 2
+    )
+
+    # StrengthSetを作成
+    StrengthSet.create!(
+      workout_exercise: strength_workout_exercise,
+      order_index: 1,
+      weight: 60000,
+      reps: 10,
+      volume: 600000
+    )
+
+    # CardioSetを作成（volumeは0）
+    CardioSet.create!(
+      workout_exercise: cardio_workout_exercise,
+      order_index: 1,
+      duration_seconds: 1800,
+      calories: 300,
+      volume: 0
+    )
+
+    assert_equal 600000, strength_workout_exercise.total_volume
+    assert_equal 0, cardio_workout_exercise.total_volume
+  end
+
+  test "workout_setsがない場合total_volumeは0" do
+    workout_exercise = WorkoutExercise.create!(
+      workout: @workout,
+      exercise: @exercise,
+      order_index: 1
+    )
+
+    assert_equal 0, workout_exercise.total_volume
+  end
+
+  test "片手種目の総負荷量計算も正しく集計される" do
+    unilateral_exercise = create_unilateral_exercise
+    
+    workout_exercise = WorkoutExercise.create!(
+      workout: @workout,
+      exercise: unilateral_exercise,
+      order_index: 1
+    )
+
+    # 片手種目のStrengthSetを作成
+    StrengthSet.create!(
+      workout_exercise: workout_exercise,
+      order_index: 1,
+      weight: 20000,
+      left_reps: 10,
+      right_reps: 12,
+      volume: 440000  # 20000 * (10 + 12)
+    )
+    StrengthSet.create!(
+      workout_exercise: workout_exercise,
+      order_index: 2,
+      weight: 20000,
+      left_reps: 8,
+      right_reps: 10,
+      volume: 360000  # 20000 * (8 + 10)
+    )
+
+    assert_equal 800000, workout_exercise.total_volume
+  end
 end

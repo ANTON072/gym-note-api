@@ -249,4 +249,70 @@ class StrengthSetTest < ActiveSupport::TestCase
     )
     assert_equal 440000, set.volume  # 20000 * (10 + 12)
   end
+
+  # volume自動計算のテスト（DBカラムへの保存）
+  test "bilateralのセット保存時にvolumeが自動計算される" do
+    set = StrengthSet.create!(
+      workout_exercise: @bilateral_workout_exercise,
+      order_index: 1,
+      weight: 60000,
+      reps: 10
+    )
+    assert_equal 600000, set.reload.volume
+  end
+
+  test "unilateralのセット保存時にvolumeが自動計算される" do
+    set = StrengthSet.create!(
+      workout_exercise: @unilateral_workout_exercise,
+      order_index: 1,
+      weight: 20000,
+      left_reps: 10,
+      right_reps: 12
+    )
+    assert_equal 440000, set.reload.volume
+  end
+
+  test "weightが0の場合volumeは0" do
+    set = StrengthSet.create!(
+      workout_exercise: @bilateral_workout_exercise,
+      order_index: 1,
+      weight: 0,
+      reps: 10
+    )
+    assert_equal 0, set.reload.volume
+  end
+
+  test "bilateralでrepsが0の場合volumeは0" do
+    set = StrengthSet.create!(
+      workout_exercise: @bilateral_workout_exercise,
+      order_index: 1,
+      weight: 60000,
+      reps: 0
+    )
+    assert_equal 0, set.reload.volume
+  end
+
+  test "unilateralで両手とも0回の場合volumeは0" do
+    set = StrengthSet.create!(
+      workout_exercise: @unilateral_workout_exercise,
+      order_index: 1,
+      weight: 20000,
+      left_reps: 0,
+      right_reps: 0
+    )
+    assert_equal 0, set.reload.volume
+  end
+
+  test "更新時にもvolumeが再計算される" do
+    set = StrengthSet.create!(
+      workout_exercise: @bilateral_workout_exercise,
+      order_index: 1,
+      weight: 60000,
+      reps: 10
+    )
+    assert_equal 600000, set.reload.volume
+
+    set.update!(weight: 80000, reps: 8)
+    assert_equal 640000, set.reload.volume
+  end
 end
