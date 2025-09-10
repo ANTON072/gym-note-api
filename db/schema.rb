@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_10_042106) do
   create_table "exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "exercise_type", null: false
@@ -50,6 +50,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
     t.index ["workout_id"], name: "index_workout_exercises_on_workout_id"
   end
 
+  create_table "workout_sets", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "workout_exercise_id", null: false
+    t.string "type", null: false
+    t.integer "weight"
+    t.integer "reps"
+    t.integer "left_reps"
+    t.integer "right_reps"
+    t.integer "duration_seconds"
+    t.integer "calories"
+    t.integer "order_index", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["type"], name: "index_workout_sets_on_type"
+    t.index ["workout_exercise_id", "order_index"], name: "index_workout_sets_on_workout_exercise_id_and_order_index", unique: true
+    t.index ["workout_exercise_id"], name: "index_workout_sets_on_workout_exercise_id"
+  end
+
   create_table "workouts", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.datetime "performed_start_at", null: false
@@ -63,5 +80,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
 
   add_foreign_key "workout_exercises", "exercises"
   add_foreign_key "workout_exercises", "workouts"
+  add_foreign_key "workout_sets", "workout_exercises", on_delete: :cascade
   add_foreign_key "workouts", "users"
 end

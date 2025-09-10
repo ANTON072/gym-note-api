@@ -26,8 +26,28 @@
 class WorkoutExercise < ApplicationRecord
   belongs_to :workout
   belongs_to :exercise
+  has_many :workout_sets, dependent: :destroy
+  alias_method :sets, :workout_sets
 
   validates :order_index, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 1 }, uniqueness: { scope: :workout_id }
   validates :total_volume, numericality: { greater_than_or_equal_to: 0 }
   validates :exercise_id, uniqueness: { scope: :workout_id }
+
+  # exercise_typeに応じたSetサブクラスをbuild
+  def build_set(attributes = {})
+    if exercise.strength?
+      sets.build(attributes.merge(type: "StrengthSet"))
+    else
+      sets.build(attributes.merge(type: "CardioSet"))
+    end
+  end
+
+  # exercise_typeに応じたSetサブクラスをcreate
+  def create_set!(attributes = {})
+    if exercise.strength?
+      sets.create!(attributes.merge(type: "StrengthSet"))
+    else
+      sets.create!(attributes.merge(type: "CardioSet"))
+    end
+  end
 end
