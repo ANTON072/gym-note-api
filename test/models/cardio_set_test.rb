@@ -173,7 +173,7 @@ class CardioSetTest < ActiveSupport::TestCase
     )
     # CardioSetではvolumeを計算しないため、常に0
     assert_equal 0, set.volume
-    
+
     set.save!
     assert_equal 0, set.reload.volume
   end

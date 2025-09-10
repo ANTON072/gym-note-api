@@ -266,13 +266,13 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
       name: "ランニング",
       exercise_type: :cardio
     )
-    
+
     strength_workout_exercise = WorkoutExercise.create!(
       workout: @workout,
       exercise: @exercise,
       order_index: 1
     )
-    
+
     cardio_workout_exercise = WorkoutExercise.create!(
       workout: @workout,
       exercise: cardio_exercise,
@@ -313,7 +313,7 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
 
   test "片手種目の総負荷量計算も正しく集計される" do
     unilateral_exercise = create_unilateral_exercise
-    
+
     workout_exercise = WorkoutExercise.create!(
       workout: @workout,
       exercise: unilateral_exercise,

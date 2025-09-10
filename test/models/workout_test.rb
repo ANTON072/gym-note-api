@@ -110,13 +110,13 @@ class WorkoutTest < ActiveSupport::TestCase
     # 筋トレ種目を2つ作成
     exercise1 = create_bilateral_exercise
     exercise2 = create_unilateral_exercise
-    
+
     workout_exercise1 = WorkoutExercise.create!(
       workout: workout,
       exercise: exercise1,
       order_index: 1
     )
-    
+
     workout_exercise2 = WorkoutExercise.create!(
       workout: workout,
       exercise: exercise2,
@@ -159,7 +159,7 @@ class WorkoutTest < ActiveSupport::TestCase
     )
 
     cardio_exercise = create_cardio_exercise
-    
+
     workout_exercise = WorkoutExercise.create!(
       workout: workout,
       exercise: cardio_exercise,
@@ -192,13 +192,13 @@ class WorkoutTest < ActiveSupport::TestCase
 
     strength_exercise = create_bilateral_exercise
     cardio_exercise = create_cardio_exercise
-    
+
     strength_workout_exercise = WorkoutExercise.create!(
       workout: workout,
       exercise: strength_exercise,
       order_index: 1
     )
-    
+
     cardio_workout_exercise = WorkoutExercise.create!(
       workout: workout,
       exercise: cardio_exercise,
@@ -257,13 +257,13 @@ class WorkoutTest < ActiveSupport::TestCase
       exercise: bench_press,
       order_index: 1
     )
-    
+
     fly_workout_exercise = WorkoutExercise.create!(
       workout: workout,
       exercise: dumbbell_fly,
       order_index: 2
     )
-    
+
     running_workout_exercise = WorkoutExercise.create!(
       workout: workout,
       exercise: running,

@@ -33,7 +33,7 @@ class WorkoutExercise < ApplicationRecord
 
   # 総負荷量を動的に集計
   def total_volume
-    workout_sets.where(type: 'StrengthSet').sum(:volume)
+    workout_sets.where(type: "StrengthSet").sum(:volume)
   end
 
   # exercise_typeに応じたSetサブクラスをbuild

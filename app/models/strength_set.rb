@@ -58,11 +58,11 @@ class StrengthSet < WorkoutSet
   def calculate_volume
     self.volume = if weight.blank?
                     0
-                  elsif exercise.bilateral?
+    elsif exercise.bilateral?
                     weight * (reps || 0)
-                  else
+    else
                     weight * ((left_reps || 0) + (right_reps || 0))
-                  end
+    end
   end
 
   def exercise_must_be_strength
