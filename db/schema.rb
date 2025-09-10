@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_10_042106) do
   create_table "exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "exercise_type", null: false
@@ -24,6 +24,23 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
     t.index ["name"], name: "index_exercises_on_name", unique: true
     t.check_constraint "`exercise_type` <> 0 or `body_part` is not null", name: "exercises_body_part_not_null_for_strength"
     t.check_constraint "`exercise_type` <> 1 or `body_part` is null", name: "exercises_body_part_null_for_cardio"
+  end
+
+  create_table "sets", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+    t.bigint "workout_exercise_id", null: false
+    t.string "type", null: false
+    t.integer "weight"
+    t.integer "reps"
+    t.integer "left_reps"
+    t.integer "right_reps"
+    t.integer "duration_seconds"
+    t.integer "calories"
+    t.integer "order_index", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["type"], name: "index_sets_on_type"
+    t.index ["workout_exercise_id", "order_index"], name: "index_sets_on_workout_exercise_id_and_order_index", unique: true
+    t.index ["workout_exercise_id"], name: "index_sets_on_workout_exercise_id"
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
@@ -61,6 +78,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_08_100000) do
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
+  add_foreign_key "sets", "workout_exercises", on_delete: :cascade
   add_foreign_key "workout_exercises", "exercises"
   add_foreign_key "workout_exercises", "workouts"
   add_foreign_key "workouts", "users"
