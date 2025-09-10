@@ -10,6 +10,7 @@
 #  reps                :integer
 #  right_reps          :integer
 #  type                :string(255)      not null
+#  volume              :integer          default(0), not null
 #  weight              :integer
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
@@ -18,6 +19,7 @@
 # Indexes
 #
 #  index_workout_sets_on_type                                 (type)
+#  index_workout_sets_on_volume                               (volume)
 #  index_workout_sets_on_workout_exercise_id                  (workout_exercise_id)
 #  index_workout_sets_on_workout_exercise_id_and_order_index  (workout_exercise_id,order_index) UNIQUE
 #

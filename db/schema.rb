@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_10_042106) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_10_151732) do
   create_table "exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "exercise_type", null: false
@@ -40,7 +40,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_10_042106) do
     t.bigint "workout_id", null: false
     t.bigint "exercise_id", null: false
     t.integer "order_index", null: false
-    t.integer "total_volume", default: 0, null: false
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -62,7 +61,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_10_042106) do
     t.integer "order_index", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "volume", default: 0, null: false
     t.index ["type"], name: "index_workout_sets_on_type"
+    t.index ["volume"], name: "index_workout_sets_on_volume"
     t.index ["workout_exercise_id", "order_index"], name: "index_workout_sets_on_workout_exercise_id_and_order_index", unique: true
     t.index ["workout_exercise_id"], name: "index_workout_sets_on_workout_exercise_id"
   end
@@ -71,7 +72,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_10_042106) do
     t.bigint "user_id", null: false
     t.datetime "performed_start_at", null: false
     t.datetime "performed_end_at"
-    t.integer "total_volume", default: 0, null: false
     t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

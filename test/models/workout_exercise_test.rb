@@ -2,14 +2,13 @@
 #
 # Table name: workout_exercises
 #
-#  id           :bigint           not null, primary key
-#  notes        :text(65535)
-#  order_index  :integer          not null
-#  total_volume :integer          default(0), not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  exercise_id  :bigint           not null
-#  workout_id   :bigint           not null
+#  id          :bigint           not null, primary key
+#  notes       :text(65535)
+#  order_index :integer          not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  exercise_id :bigint           not null
+#  workout_id  :bigint           not null
 #
 # Indexes
 #

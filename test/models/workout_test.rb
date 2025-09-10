@@ -6,7 +6,6 @@
 #  memo               :text(65535)
 #  performed_end_at   :datetime
 #  performed_start_at :datetime         not null
-#  total_volume       :integer          default(0), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  user_id            :bigint           not null
