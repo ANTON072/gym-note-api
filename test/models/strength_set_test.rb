@@ -284,14 +284,16 @@ class StrengthSetTest < ActiveSupport::TestCase
     assert_equal 0, set.reload.volume
   end
 
-  test "bilateralでrepsが0の場合volumeは0" do
-    set = StrengthSet.create!(
+  test "bilateralでrepsがnilの場合volumeは0" do
+    set = StrengthSet.new(
       workout_exercise: @bilateral_workout_exercise,
       order_index: 1,
       weight: 60000,
-      reps: 0
+      reps: nil
     )
-    assert_equal 0, set.reload.volume
+    # repsがnilの場合はバリデーションエラーになる
+    assert_not set.valid?
+    assert_includes set.errors.details[:reps], { error: :blank }
   end
 
   test "unilateralで両手とも0回の場合volumeは0" do

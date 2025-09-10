@@ -264,9 +264,7 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
   test "CardioSetは総負荷量計算に含まれない" do
     cardio_exercise = Exercise.create!(
       name: "ランニング",
-      exercise_type: :cardio,
-      body_part: :full_body,
-      laterality: :bilateral
+      exercise_type: :cardio
     )
     
     strength_workout_exercise = WorkoutExercise.create!(

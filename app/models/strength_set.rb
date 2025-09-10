@@ -39,11 +39,14 @@ class StrengthSet < WorkoutSet
   # lateralityに基づくrepsのバリデーション
   validate :validate_reps_by_laterality
 
-  # 総負荷量計算
-  def volume
-    return 0 if weight.blank?
+  # 保存前にvolumeを自動計算
+  before_save :calculate_volume
 
-    if exercise.bilateral?
+  # 総負荷量計算（テスト用にpublicメソッドとして残す）
+  def volume
+    if weight.blank?
+      0
+    elsif exercise.bilateral?
       weight * (reps || 0)
     else
       weight * ((left_reps || 0) + (right_reps || 0))
@@ -51,6 +54,16 @@ class StrengthSet < WorkoutSet
   end
 
   private
+
+  def calculate_volume
+    self.volume = if weight.blank?
+                    0
+                  elsif exercise.bilateral?
+                    weight * (reps || 0)
+                  else
+                    weight * ((left_reps || 0) + (right_reps || 0))
+                  end
+  end
 
   def exercise_must_be_strength
     return unless workout_exercise&.exercise

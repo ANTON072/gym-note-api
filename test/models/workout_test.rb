@@ -30,7 +30,6 @@ class WorkoutTest < ActiveSupport::TestCase
       user: @user,
       performed_start_at: Time.current,
       performed_end_at: 1.hour.from_now,
-      total_volume: 1000,
       memo: "テストワークアウト"
     )
     assert workout.valid?
@@ -39,8 +38,7 @@ class WorkoutTest < ActiveSupport::TestCase
   test "user_idは必須である" do
     workout = Workout.new(
       performed_start_at: Time.current,
-      performed_end_at: 1.hour.from_now,
-      total_volume: 1000
+      performed_end_at: 1.hour.from_now
     )
     assert_not workout.valid?
     assert_includes workout.errors.details[:user], { error: :blank }
@@ -49,8 +47,7 @@ class WorkoutTest < ActiveSupport::TestCase
   test "performed_start_atは必須である" do
     workout = Workout.new(
       user: @user,
-      performed_end_at: 1.hour.from_now,
-      total_volume: 1000
+      performed_end_at: 1.hour.from_now
     )
     assert_not workout.valid?
     assert_includes workout.errors.details[:performed_start_at], { error: :blank }
@@ -59,30 +56,11 @@ class WorkoutTest < ActiveSupport::TestCase
   test "performed_end_atは省略可能である" do
     workout = Workout.new(
       user: @user,
-      performed_start_at: Time.current,
-      total_volume: 1000
+      performed_start_at: Time.current
     )
     assert workout.valid?
   end
 
-  test "total_volumeのデフォルト値は0である" do
-    workout = Workout.new(
-      user: @user,
-      performed_start_at: Time.current
-    )
-    workout.valid?
-    assert_equal 0, workout.total_volume
-  end
-
-  test "total_volumeは負の値にできない" do
-    workout = Workout.new(
-      user: @user,
-      performed_start_at: Time.current,
-      total_volume: -100
-    )
-    assert_not workout.valid?
-    assert_includes workout.errors.details[:total_volume], { error: :greater_than_or_equal_to, value: -100, count: 0 }
-  end
 
   test "performed_end_atはperformed_start_at以降でなければならない" do
     workout = Workout.new(
@@ -97,8 +75,7 @@ class WorkoutTest < ActiveSupport::TestCase
   test "memoは省略可能である" do
     workout = Workout.new(
       user: @user,
-      performed_start_at: Time.current,
-      total_volume: 1000
+      performed_start_at: Time.current
     )
     assert workout.valid?
     assert_nil workout.memo
@@ -107,8 +84,7 @@ class WorkoutTest < ActiveSupport::TestCase
   test "userとの関連付けが正しく動作する" do
     workout = Workout.create!(
       user: @user,
-      performed_start_at: Time.current,
-      total_volume: 1000
+      performed_start_at: Time.current
     )
     assert_equal @user, workout.user
     assert_includes @user.workouts, workout
@@ -117,8 +93,7 @@ class WorkoutTest < ActiveSupport::TestCase
   test "userが削除されると関連するworkoutsも削除される" do
     workout = Workout.create!(
       user: @user,
-      performed_start_at: Time.current,
-      total_volume: 1000
+      performed_start_at: Time.current
     )
     assert_difference "Workout.count", -1 do
       @user.destroy
