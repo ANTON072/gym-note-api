@@ -12,7 +12,7 @@ module ActiveSupport
     fixtures :all
 
     # Add more helper methods to be used by all tests here...
-    
+
     # 共通のテストデータ作成ヘルパーメソッド
     def create_test_user
       User.create!(
