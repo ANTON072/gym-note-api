@@ -1,0 +1,142 @@
+require "test_helper"
+
+class CardioSetTest < ActiveSupport::TestCase
+  setup do
+    @user = User.create!(
+      firebase_uid: "test_uid_#{SecureRandom.hex(10)}",
+      email: "test_#{SecureRandom.hex(10)}@example.com",
+      name: "テストユーザー"
+    )
+    @cardio_exercise = Exercise.create!(
+      name: "トレッドミル",
+      exercise_type: :cardio
+    )
+    @strength_exercise = Exercise.create!(
+      name: "ベンチプレス",
+      exercise_type: :strength,
+      laterality: :bilateral
+    )
+    @workout = Workout.create!(
+      user: @user,
+      performed_start_at: Time.current
+    )
+    @cardio_workout_exercise = WorkoutExercise.create!(
+      workout: @workout,
+      exercise: @cardio_exercise,
+      order_index: 1
+    )
+    @strength_workout_exercise = WorkoutExercise.create!(
+      workout: @workout,
+      exercise: @strength_exercise,
+      order_index: 2
+    )
+  end
+
+  # 基本的なCardioSetのテスト
+  test "duration_secondsはオプション" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      calories: 300
+    )
+    assert set.valid?
+  end
+
+  test "caloriesはオプション" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      duration_seconds: 1800
+    )
+    assert set.valid?
+  end
+
+  test "duration_secondsとcaloriesの両方がなくても有効" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1
+    )
+    assert set.valid?
+  end
+
+  test "duration_secondsが設定される場合は1以上" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      duration_seconds: 0
+    )
+    assert_not set.valid?
+    assert_includes set.errors.details[:duration_seconds], { error: :greater_than_or_equal_to, count: 1 }
+  end
+
+  test "caloriesが設定される場合は0以上" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      calories: -10
+    )
+    assert_not set.valid?
+    assert_includes set.errors.details[:calories], { error: :greater_than_or_equal_to, count: 0 }
+  end
+
+  test "正常なCardioSetの作成（両方の値あり）" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      duration_seconds: 1800,
+      calories: 300
+    )
+    assert set.valid?
+  end
+
+  # StrengthSetのフィールドが設定されていたらエラー
+  test "weightが設定されていたらエラー" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      weight: 50000
+    )
+    assert_not set.valid?
+    assert_includes set.errors.details[:weight], { error: :present }
+  end
+
+  test "repsが設定されていたらエラー" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      reps: 10
+    )
+    assert_not set.valid?
+    assert_includes set.errors.details[:reps], { error: :present }
+  end
+
+  test "left_repsが設定されていたらエラー" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      left_reps: 10
+    )
+    assert_not set.valid?
+    assert_includes set.errors.details[:left_reps], { error: :present }
+  end
+
+  test "right_repsが設定されていたらエラー" do
+    set = CardioSet.new(
+      workout_exercise: @cardio_workout_exercise,
+      order_index: 1,
+      right_reps: 10
+    )
+    assert_not set.valid?
+    assert_includes set.errors.details[:right_reps], { error: :present }
+  end
+
+  # exercise_typeがcardioでない場合のバリデーション
+  test "exercise_typeがstrengthの場合はエラー" do
+    set = CardioSet.new(
+      workout_exercise: @strength_workout_exercise,
+      order_index: 1
+    )
+    assert_not set.valid?
+    assert_includes set.errors.details[:base], { error: :invalid_exercise_type }
+  end
+end
