@@ -17,6 +17,10 @@ Gym Note API は、筋力トレーニングの記録と管理を目的とした 
 - Docker
 - Docker Compose
 
+## API開発ツール
+
+- **Postmanワークスペース**: https://web.postman.co/workspace/gym-note-api~ade0227e-3921-4634-b24a-e04fdf90b54c/overview
+
 ## VSCode での開発
 
 このプロジェクトは VSCode での開発に最適化されており、Dev Container と Ruby デバッグ環境が設定されています。

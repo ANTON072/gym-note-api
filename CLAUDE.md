@@ -158,7 +158,6 @@ rails db:reset
 - [要件定義](./docs/要件定義.md)
 - [認証フロー](./docs/認証フロー.md)
 - [Firebase Emulator を利用した開発](./firebase_emulator/README.md)
-- [API の実行テスト](./api.http)
 - [コードレビュー対応指針](./docs/コードレビュー対応指針.md)
 - [テスト実装のベストプラクティス](./docs/テスト実装のベストプラクティス.md)
 - [テスト指針](./docs/テスト指針.md)
