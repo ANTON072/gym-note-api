@@ -3,7 +3,7 @@
 # Table name: workout_exercises
 #
 #  id          :bigint           not null, primary key
-#  notes       :text(65535)
+#  memo        :text(65535)
 #  order_index :integer          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
@@ -192,35 +192,35 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
   end
 
 
-  test "notesフィールドに長いテキストを保存できる" do
+  test "memoフィールドに長いテキストを保存できる" do
     long_text = "a" * 1000
     workout_exercise = WorkoutExercise.new(
       workout: @workout,
       exercise: @exercise,
       order_index: 1,
-      notes: long_text
+      memo: long_text
     )
     assert workout_exercise.valid?
     workout_exercise.save!
-    assert_equal long_text, workout_exercise.reload.notes
+    assert_equal long_text, workout_exercise.reload.memo
   end
 
-  test "notesフィールドはnullを許可する" do
+  test "memoフィールドはnullを許可する" do
     workout_exercise = WorkoutExercise.new(
       workout: @workout,
       exercise: @exercise,
       order_index: 1,
-      notes: nil
+      memo: nil
     )
     assert workout_exercise.valid?
   end
 
-  test "notesフィールドは空文字列を許可する" do
+  test "memoフィールドは空文字列を許可する" do
     workout_exercise = WorkoutExercise.new(
       workout: @workout,
       exercise: @exercise,
       order_index: 1,
-      notes: ""
+      memo: ""
     )
     assert workout_exercise.valid?
   end

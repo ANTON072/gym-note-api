@@ -115,7 +115,7 @@ Rails の単一テーブル継承（STI）を使用：
 | workout_id   | integer  | ワークアウト ID                               |
 | exercise_id  | integer  | 種目 ID                                       |
 | order_index  | integer  | 表示順（exercises 配列の index から自動設定） |
-| notes        | text     | メモ                                          |
+| memo         | text     | メモ                                          |
 | created_at   | datetime | 作成日時（UTC）                               |
 | updated_at   | datetime | 更新日時（UTC）                               |
 

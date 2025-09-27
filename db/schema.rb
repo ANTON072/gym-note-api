@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_27_230956) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_27_231000) do
   create_table "exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "laterality"
@@ -36,7 +36,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_27_230956) do
     t.bigint "workout_id", null: false
     t.bigint "exercise_id", null: false
     t.integer "order_index", null: false
-    t.text "notes"
+    t.text "memo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["exercise_id"], name: "index_workout_exercises_on_exercise_id"
