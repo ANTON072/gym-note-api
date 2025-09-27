@@ -24,5 +24,11 @@ ja:
           attributes:
             laterality:
               cardio_cannot_have_laterality: "有酸素運動の場合、実施形態は設定できません"
-            body_part:
-              cardio_cannot_have_body_part: "有酸素運動の場合、部位は設定できません"
+        cardio_set:
+          attributes:
+            base:
+              invalid_body_part: "有酸素運動以外のエクササイズには使用できません"
+        strength_set:
+          attributes:
+            base:
+              invalid_body_part: "有酸素運動のエクササイズには使用できません"

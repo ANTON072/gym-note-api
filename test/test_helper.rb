@@ -32,7 +32,6 @@ module ActiveSupport
     def create_bilateral_exercise(name: "ベンチプレス", body_part: :chest)
       Exercise.create!(
         name: name,
-        exercise_type: :strength,
         laterality: :bilateral,
         body_part: body_part
       )
@@ -41,7 +40,6 @@ module ActiveSupport
     def create_unilateral_exercise(name: "ダンベルカール", body_part: :arms)
       Exercise.create!(
         name: name,
-        exercise_type: :strength,
         laterality: :unilateral,
         body_part: body_part
       )
@@ -50,7 +48,7 @@ module ActiveSupport
     def create_cardio_exercise(name: "トレッドミル")
       Exercise.create!(
         name: name,
-        exercise_type: :cardio
+        body_part: :cardio
       )
     end
 

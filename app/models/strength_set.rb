@@ -33,7 +33,7 @@ class StrengthSet < WorkoutSet
   # CardioSetのフィールドは使用しない
   validates :duration_seconds, :calories, absence: true
 
-  # exercise_typeがstrengthであることを確認
+  # body_partがcardio以外であることを確認
   validate :exercise_must_be_strength
 
   # lateralityに基づくrepsのバリデーション
@@ -68,8 +68,8 @@ class StrengthSet < WorkoutSet
   def exercise_must_be_strength
     return unless workout_exercise&.exercise
 
-    unless exercise.strength?
-      errors.add(:base, :invalid_exercise_type)
+    if exercise.body_part == 'cardio'
+      errors.add(:base, :invalid_body_part)
     end
   end
 

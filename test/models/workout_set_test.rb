@@ -146,8 +146,8 @@ class WorkoutSetTest < ActiveSupport::TestCase
     end
   end
 
-  test "build_setでexercise_typeに応じたSTIクラスが作成される" do
-    # strengthの場合
+  test "build_setでbody_partに応じたSTIクラスが作成される" do
+    # cardio以外の場合
     strength_set = @strength_workout_exercise.build_set(
       order_index: 1,
       weight: 60000,
@@ -166,8 +166,8 @@ class WorkoutSetTest < ActiveSupport::TestCase
     assert_equal "CardioSet", cardio_set.type
   end
 
-  test "create_setでexercise_typeに応じたSTIクラスが作成される" do
-    # strengthの場合
+  test "create_setでbody_partに応じたSTIクラスが作成される" do
+    # cardio以外の場合
     strength_set = @strength_workout_exercise.create_set!(
       order_index: 1,
       weight: 60000,

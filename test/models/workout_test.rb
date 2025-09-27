@@ -244,7 +244,6 @@ class WorkoutTest < ActiveSupport::TestCase
     # 3つの種目を作成
     bench_press = Exercise.create!(
       name: "ベンチプレス",
-      exercise_type: :strength,
       body_part: :chest,
       laterality: :bilateral
     )

@@ -36,21 +36,21 @@ class WorkoutExercise < ApplicationRecord
     workout_sets.where(type: "StrengthSet").sum(:volume)
   end
 
-  # exercise_typeに応じたSetサブクラスをbuild
+  # body_partに応じたSetサブクラスをbuild
   def build_set(attributes = {})
-    if exercise.strength?
-      sets.build(attributes.merge(type: "StrengthSet"))
-    else
+    if exercise.body_part == 'cardio'
       sets.build(attributes.merge(type: "CardioSet"))
+    else
+      sets.build(attributes.merge(type: "StrengthSet"))
     end
   end
 
-  # exercise_typeに応じたSetサブクラスをcreate
+  # body_partに応じたSetサブクラスをcreate
   def create_set!(attributes = {})
-    if exercise.strength?
-      sets.create!(attributes.merge(type: "StrengthSet"))
-    else
+    if exercise.body_part == 'cardio'
       sets.create!(attributes.merge(type: "CardioSet"))
+    else
+      sets.create!(attributes.merge(type: "StrengthSet"))
     end
   end
 end

@@ -145,14 +145,14 @@ class CardioSetTest < ActiveSupport::TestCase
     assert_includes set.errors.details[:right_reps], { error: :present }
   end
 
-  # exercise_typeがcardioでない場合のバリデーション
-  test "exercise_typeがstrengthの場合はエラー" do
+  # body_partがcardioでない場合のバリデーション
+  test "body_partがcardio以外の場合はエラー" do
     set = CardioSet.new(
       workout_exercise: @strength_workout_exercise,
       order_index: 1
     )
     assert_not set.valid?
-    assert_includes set.errors.details[:base], { error: :invalid_exercise_type }
+    assert_includes set.errors.details[:base], { error: :invalid_body_part }
   end
 
   # volumeは常に0であることのテスト
