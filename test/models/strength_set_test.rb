@@ -5,10 +5,8 @@
 #  id                  :bigint           not null, primary key
 #  calories            :integer
 #  duration_seconds    :integer
-#  left_reps           :integer
 #  order_index         :integer          not null
 #  reps                :integer
-#  right_reps          :integer
 #  type                :string(255)      not null
 #  volume              :integer          default(0), not null
 #  weight              :integer
@@ -32,25 +30,19 @@ require "test_helper"
 class StrengthSetTest < ActiveSupport::TestCase
   setup do
     @user = create_test_user
-    @bilateral_exercise = create_bilateral_exercise
-    @unilateral_exercise = create_unilateral_exercise
+    @exercise = create_bilateral_exercise
     @workout = create_test_workout(user: @user)
-    @bilateral_workout_exercise = create_workout_exercise(
+    @workout_exercise = create_workout_exercise(
       workout: @workout,
-      exercise: @bilateral_exercise,
+      exercise: @exercise,
       order_index: 1
-    )
-    @unilateral_workout_exercise = create_workout_exercise(
-      workout: @workout,
-      exercise: @unilateral_exercise,
-      order_index: 2
     )
   end
 
   # 基本的なStrengthSetのテスト
   test "weightの必須バリデーション" do
     set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       reps: 10
     )
@@ -60,7 +52,7 @@ class StrengthSetTest < ActiveSupport::TestCase
 
   test "weightが0以上のバリデーション" do
     set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       weight: -100,
       reps: 10
@@ -69,10 +61,9 @@ class StrengthSetTest < ActiveSupport::TestCase
     assert_includes set.errors.details[:weight], { error: :greater_than_or_equal_to, value: -100, count: 0 }
   end
 
-  # bilateral（両側）の場合のテスト
-  test "bilateralの場合はrepsが必須" do
+  test "repsの必須バリデーション" do
     set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       weight: 60000
     )
@@ -80,9 +71,9 @@ class StrengthSetTest < ActiveSupport::TestCase
     assert_includes set.errors.details[:reps], { error: :blank }
   end
 
-  test "bilateralの場合はrepsが1以上" do
+  test "repsが1以上のバリデーション" do
     set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       weight: 60000,
       reps: 0
@@ -91,118 +82,13 @@ class StrengthSetTest < ActiveSupport::TestCase
     assert_includes set.errors.details[:reps], { error: :greater_than_or_equal_to, value: 0, count: 1 }
   end
 
-  test "bilateralの場合はleft_repsが設定されていたらエラー" do
-    set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
-      order_index: 1,
-      weight: 60000,
-      reps: 10,
-      left_reps: 5
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:left_reps], { error: :present }
-  end
 
-  test "bilateralの場合はright_repsが設定されていたらエラー" do
+  test "正常なセット作成" do
     set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
-      order_index: 1,
-      weight: 60000,
-      reps: 10,
-      right_reps: 5
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:right_reps], { error: :present }
-  end
-
-  test "bilateralの場合の正常なセット作成" do
-    set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       weight: 60000,
       reps: 10
-    )
-    assert set.valid?
-  end
-
-  # unilateral（片側）の場合のテスト
-  test "unilateralの場合はleft_repsが必須" do
-    set = StrengthSet.new(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      right_reps: 10
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:left_reps], { error: :blank }
-  end
-
-  test "unilateralの場合はright_repsが必須" do
-    set = StrengthSet.new(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      left_reps: 10
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:right_reps], { error: :blank }
-  end
-
-  test "unilateralの場合はleft_repsが0以上" do
-    set = StrengthSet.new(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      left_reps: -1,
-      right_reps: 10
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:left_reps], { error: :greater_than_or_equal_to, value: -1, count: 0 }
-  end
-
-  test "unilateralの場合はright_repsが0以上" do
-    set = StrengthSet.new(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      left_reps: 10,
-      right_reps: -1
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:right_reps], { error: :greater_than_or_equal_to, value: -1, count: 0 }
-  end
-
-  test "unilateralの場合はrepsが設定されていたらエラー" do
-    set = StrengthSet.new(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      left_reps: 10,
-      right_reps: 10,
-      reps: 10
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:reps], { error: :present }
-  end
-
-  test "unilateralの場合の正常なセット作成" do
-    set = StrengthSet.new(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      left_reps: 10,
-      right_reps: 12
-    )
-    assert set.valid?
-  end
-
-  test "unilateralの場合、片側だけ0回も許可する" do
-    set = StrengthSet.new(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      left_reps: 0,
-      right_reps: 10
     )
     assert set.valid?
   end
@@ -210,7 +96,7 @@ class StrengthSetTest < ActiveSupport::TestCase
   # CardioSetのフィールドが設定されていたらエラー
   test "duration_secondsが設定されていたらエラー" do
     set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       weight: 60000,
       reps: 10,
@@ -222,7 +108,7 @@ class StrengthSetTest < ActiveSupport::TestCase
 
   test "caloriesが設定されていたらエラー" do
     set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       weight: 60000,
       reps: 10,
@@ -233,29 +119,53 @@ class StrengthSetTest < ActiveSupport::TestCase
   end
 
   # 総負荷量計算のテスト
-  test "bilateralの場合の総負荷量計算" do
+  test "bilateral種目の総負荷量計算" do
     set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       weight: 60000,
       reps: 10
     )
     assert_equal 600000, set.volume
   end
 
-  test "unilateralの場合の総負荷量計算" do
-    set = StrengthSet.new(
-      workout_exercise: @unilateral_workout_exercise,
-      weight: 20000,
-      left_reps: 10,
-      right_reps: 12
+  test "unilateral種目の総負荷量計算（重量を2倍）" do
+    unilateral_exercise = create_unilateral_exercise
+    unilateral_workout_exercise = create_workout_exercise(
+      workout: @workout,
+      exercise: unilateral_exercise,
+      order_index: 2
     )
-    assert_equal 440000, set.volume  # 20000 * (10 + 12)
+
+    set = StrengthSet.new(
+      workout_exercise: unilateral_workout_exercise,
+      weight: 20000,  # 片方の重量
+      reps: 10
+    )
+    assert_equal 400000, set.volume  # 20000 * 10 * 2
+  end
+
+  test "weightが0の場合volumeは0" do
+    set = StrengthSet.new(
+      workout_exercise: @workout_exercise,
+      weight: 0,
+      reps: 10
+    )
+    assert_equal 0, set.volume
+  end
+
+  test "weightがnilの場合volumeは0" do
+    set = StrengthSet.new(
+      workout_exercise: @workout_exercise,
+      weight: nil,
+      reps: 10
+    )
+    assert_equal 0, set.volume
   end
 
   # volume自動計算のテスト（DBカラムへの保存）
-  test "bilateralのセット保存時にvolumeが自動計算される" do
+  test "bilateral種目のセット保存時にvolumeが自動計算される" do
     set = StrengthSet.create!(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       weight: 60000,
       reps: 10
@@ -263,53 +173,26 @@ class StrengthSetTest < ActiveSupport::TestCase
     assert_equal 600000, set.reload.volume
   end
 
-  test "unilateralのセット保存時にvolumeが自動計算される" do
-    set = StrengthSet.create!(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      left_reps: 10,
-      right_reps: 12
+  test "unilateral種目のセット保存時にvolumeが自動計算される（重量2倍）" do
+    unilateral_exercise = create_unilateral_exercise
+    unilateral_workout_exercise = create_workout_exercise(
+      workout: @workout,
+      exercise: unilateral_exercise,
+      order_index: 2
     )
-    assert_equal 440000, set.reload.volume
-  end
 
-  test "weightが0の場合volumeは0" do
     set = StrengthSet.create!(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: unilateral_workout_exercise,
       order_index: 1,
-      weight: 0,
+      weight: 20000,  # 片方の重量
       reps: 10
     )
-    assert_equal 0, set.reload.volume
-  end
-
-  test "bilateralでrepsがnilの場合はバリデーションエラーになる" do
-    set = StrengthSet.new(
-      workout_exercise: @bilateral_workout_exercise,
-      order_index: 1,
-      weight: 60000,
-      reps: nil
-    )
-    # repsがnilの場合はバリデーションエラーになる
-    assert_not set.valid?
-    assert_includes set.errors.details[:reps], { error: :blank }
-  end
-
-  test "unilateralで両手とも0回の場合volumeは0" do
-    set = StrengthSet.create!(
-      workout_exercise: @unilateral_workout_exercise,
-      order_index: 1,
-      weight: 20000,
-      left_reps: 0,
-      right_reps: 0
-    )
-    assert_equal 0, set.reload.volume
+    assert_equal 400000, set.reload.volume  # 20000 * 10 * 2
   end
 
   test "更新時にもvolumeが再計算される" do
     set = StrengthSet.create!(
-      workout_exercise: @bilateral_workout_exercise,
+      workout_exercise: @workout_exercise,
       order_index: 1,
       weight: 60000,
       reps: 10

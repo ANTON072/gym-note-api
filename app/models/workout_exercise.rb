@@ -38,7 +38,7 @@ class WorkoutExercise < ApplicationRecord
 
   # body_partに応じたSetサブクラスをbuild
   def build_set(attributes = {})
-    if exercise.body_part == 'cardio'
+    if exercise.body_part == "cardio"
       sets.build(attributes.merge(type: "CardioSet"))
     else
       sets.build(attributes.merge(type: "StrengthSet"))
@@ -47,7 +47,7 @@ class WorkoutExercise < ApplicationRecord
 
   # body_partに応じたSetサブクラスをcreate
   def create_set!(attributes = {})
-    if exercise.body_part == 'cardio'
+    if exercise.body_part == "cardio"
       sets.create!(attributes.merge(type: "CardioSet"))
     else
       sets.create!(attributes.merge(type: "StrengthSet"))

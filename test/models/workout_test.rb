@@ -139,17 +139,16 @@ class WorkoutTest < ActiveSupport::TestCase
       volume: 480000
     )
 
-    # exercise2のセット
+    # exercise2のセット（unilateral種目なので自動的に重量2倍でvolume計算される）
     StrengthSet.create!(
       workout_exercise: workout_exercise2,
       order_index: 1,
       weight: 20000,
-      left_reps: 10,
-      right_reps: 12,
-      volume: 440000
+      reps: 12
+      # volume: 20000 * 12 * 2 = 480000 （自動計算）
     )
 
-    assert_equal 1520000, workout.total_volume  # 600000 + 480000 + 440000
+    assert_equal 1560000, workout.total_volume  # 600000 + 480000 + 480000
   end
 
   test "有酸素運動のみの場合total_volumeは0" do
@@ -274,9 +273,9 @@ class WorkoutTest < ActiveSupport::TestCase
     StrengthSet.create!(workout_exercise: bench_workout_exercise, order_index: 2, weight: 85000, reps: 8, volume: 680000)
     StrengthSet.create!(workout_exercise: bench_workout_exercise, order_index: 3, weight: 90000, reps: 6, volume: 540000)
 
-    # ダンベルフライのセット (2セット)
-    StrengthSet.create!(workout_exercise: fly_workout_exercise, order_index: 1, weight: 15000, left_reps: 12, right_reps: 12, volume: 360000)
-    StrengthSet.create!(workout_exercise: fly_workout_exercise, order_index: 2, weight: 15000, left_reps: 10, right_reps: 10, volume: 300000)
+    # ダンベルフライのセット (2セット) - unilateral種目なので自動的に重量2倍でvolume計算
+    StrengthSet.create!(workout_exercise: fly_workout_exercise, order_index: 1, weight: 15000, reps: 12)  # volume: 15000 * 12 * 2 = 360000
+    StrengthSet.create!(workout_exercise: fly_workout_exercise, order_index: 2, weight: 15000, reps: 10)  # volume: 15000 * 10 * 2 = 300000
 
     # ランニング
     CardioSet.create!(workout_exercise: running_workout_exercise, order_index: 1, duration_seconds: 1800, calories: 300, volume: 0)

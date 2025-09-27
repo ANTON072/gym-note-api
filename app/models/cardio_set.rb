@@ -5,10 +5,8 @@
 #  id                  :bigint           not null, primary key
 #  calories            :integer
 #  duration_seconds    :integer
-#  left_reps           :integer
 #  order_index         :integer          not null
 #  reps                :integer
-#  right_reps          :integer
 #  type                :string(255)      not null
 #  volume              :integer          default(0), not null
 #  weight              :integer
@@ -33,7 +31,7 @@ class CardioSet < WorkoutSet
   validates :calories, numericality: { greater_than_or_equal_to: 0 }, allow_blank: true
 
   # StrengthSetのフィールドは使用しない
-  validates :weight, :reps, :left_reps, :right_reps, absence: true
+  validates :weight, :reps, absence: true
 
   # body_partがcardioであることを確認
   validate :exercise_must_be_cardio
@@ -43,7 +41,7 @@ class CardioSet < WorkoutSet
   def exercise_must_be_cardio
     return unless workout_exercise&.exercise
 
-    unless exercise.body_part == 'cardio'
+    unless exercise.body_part == "cardio"
       errors.add(:base, :invalid_body_part)
     end
   end

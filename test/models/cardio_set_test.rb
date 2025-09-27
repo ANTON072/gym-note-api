@@ -5,10 +5,8 @@
 #  id                  :bigint           not null, primary key
 #  calories            :integer
 #  duration_seconds    :integer
-#  left_reps           :integer
 #  order_index         :integer          not null
 #  reps                :integer
-#  right_reps          :integer
 #  type                :string(255)      not null
 #  volume              :integer          default(0), not null
 #  weight              :integer
@@ -125,25 +123,6 @@ class CardioSetTest < ActiveSupport::TestCase
     assert_includes set.errors.details[:reps], { error: :present }
   end
 
-  test "left_repsが設定されていたらエラー" do
-    set = CardioSet.new(
-      workout_exercise: @cardio_workout_exercise,
-      order_index: 1,
-      left_reps: 10
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:left_reps], { error: :present }
-  end
-
-  test "right_repsが設定されていたらエラー" do
-    set = CardioSet.new(
-      workout_exercise: @cardio_workout_exercise,
-      order_index: 1,
-      right_reps: 10
-    )
-    assert_not set.valid?
-    assert_includes set.errors.details[:right_reps], { error: :present }
-  end
 
   # body_partがcardioでない場合のバリデーション
   test "body_partがcardio以外の場合はエラー" do

@@ -5,10 +5,8 @@
 #  id                  :bigint           not null, primary key
 #  calories            :integer
 #  duration_seconds    :integer
-#  left_reps           :integer
 #  order_index         :integer          not null
 #  reps                :integer
-#  right_reps          :integer
 #  type                :string(255)      not null
 #  volume              :integer          default(0), not null
 #  weight              :integer

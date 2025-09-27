@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_09_27_000001) do
+ActiveRecord::Schema[8.0].define(version: 2025_09_27_230956) do
   create_table "exercises", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
     t.string "name", null: false
     t.integer "laterality"
@@ -50,8 +50,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_09_27_000001) do
     t.string "type", null: false
     t.integer "weight"
     t.integer "reps"
-    t.integer "left_reps"
-    t.integer "right_reps"
     t.integer "duration_seconds"
     t.integer "calories"
     t.integer "order_index", null: false

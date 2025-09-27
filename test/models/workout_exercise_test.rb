@@ -309,33 +309,35 @@ class WorkoutExerciseTest < ActiveSupport::TestCase
     assert_equal 0, workout_exercise.total_volume
   end
 
-  test "片手種目の総負荷量計算も正しく集計される" do
-    unilateral_exercise = create_unilateral_exercise
+  test "別の種目の総負荷量計算も正しく集計される" do
+    another_exercise = Exercise.create!(
+      name: "ダンベルカール",
+      body_part: :arms,
+      laterality: :bilateral
+    )
 
     workout_exercise = WorkoutExercise.create!(
       workout: @workout,
-      exercise: unilateral_exercise,
+      exercise: another_exercise,
       order_index: 1
     )
 
-    # 片手種目のStrengthSetを作成
+    # StrengthSetを作成
     StrengthSet.create!(
       workout_exercise: workout_exercise,
       order_index: 1,
       weight: 20000,
-      left_reps: 10,
-      right_reps: 12,
-      volume: 440000  # 20000 * (10 + 12)
+      reps: 12,
+      volume: 240000  # 20000 * 12
     )
     StrengthSet.create!(
       workout_exercise: workout_exercise,
       order_index: 2,
       weight: 20000,
-      left_reps: 8,
-      right_reps: 10,
-      volume: 360000  # 20000 * (8 + 10)
+      reps: 10,
+      volume: 200000  # 20000 * 10
     )
 
-    assert_equal 800000, workout_exercise.total_volume
+    assert_equal 440000, workout_exercise.total_volume
   end
 end

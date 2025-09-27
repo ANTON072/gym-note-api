@@ -40,8 +40,8 @@
 ### 種目
 
 - 種目名
-- ダンベル種目判定
-- 片方ずつやる種目判定
+- 体の部位（脚部、背中、肩、腕部、胸部、有酸素運動）
+- 実施形態（bilateral: 両側同時実施、unilateral: 片側ずつ実施）
 
 ### WorkoutExercise（ワークアウト内の種目記録）
 
@@ -53,8 +53,8 @@
 Rails の単一テーブル継承（STI）を使用：
 
 - StrengthSet（筋トレ用）
-  - 重量（ダンベル種目の場合は片方の重量）
-  - レップ数（片方ずつやる種目の場合は左右別）
+  - 重量
+  - レップ数
 - CardioSet（有酸素運動用）
   - 実施時間
   - 消費カロリー
@@ -64,8 +64,8 @@ Rails の単一テーブル継承（STI）を使用：
 - WorkoutExercise が複数登録が可能
 - 総負荷量は workout_sets.volume から動的に集計
   - セット毎の volume は保存時に自動計算
-  - bilateral（両側）の場合: volume = weight × reps
-  - unilateral（片側）の場合: volume = weight × (left_reps + right_reps)
+  - bilateral種目の場合: volume = weight × reps
+  - unilateral種目の場合: volume = weight × reps × 2（記録された重量は片方なので2倍）
 
 ## ドメインモデル詳細
 
@@ -127,9 +127,7 @@ Rails の単一テーブル継承（STI）を使用：
 | workout_exercise_id | integer  | WorkoutExerciseID                             |
 | type                | string   | STI 識別子（StrengthSet/CardioSet）           |
 | weight              | integer  | 重量（グラム）※StrengthSet 用                 |
-| reps                | integer  | レップ数（通常種目）※StrengthSet 用           |
-| left_reps           | integer  | 左側レップ数（片方ずつの種目）※StrengthSet 用 |
-| right_reps          | integer  | 右側レップ数（片方ずつの種目）※StrengthSet 用 |
+| reps                | integer  | レップ数※StrengthSet 用                       |
 | duration_seconds    | integer  | 実施時間（秒）※CardioSet 用                   |
 | calories            | integer  | 消費カロリー（kcal）※CardioSet 用             |
 | order_index         | integer  | セット順                                      |

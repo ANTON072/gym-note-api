@@ -5,10 +5,8 @@
 #  id                  :bigint           not null, primary key
 #  calories            :integer
 #  duration_seconds    :integer
-#  left_reps           :integer
 #  order_index         :integer          not null
 #  reps                :integer
-#  right_reps          :integer
 #  type                :string(255)      not null
 #  volume              :integer          default(0), not null
 #  weight              :integer
@@ -29,27 +27,31 @@
 #
 class StrengthSet < WorkoutSet
   validates :weight, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :reps, presence: true, numericality: { greater_than_or_equal_to: 1 }
 
   # CardioSetのフィールドは使用しない
   validates :duration_seconds, :calories, absence: true
 
+  # exerciseへのアクセスを委譲
+  delegate :exercise, to: :workout_exercise
+
+
   # body_partがcardio以外であることを確認
   validate :exercise_must_be_strength
-
-  # lateralityに基づくrepsのバリデーション
-  validate :validate_reps_by_laterality
 
   # 保存前にvolumeを自動計算
   before_save :calculate_volume
 
   # 総負荷量計算（テスト用にpublicメソッドとして残す）
   def volume
-    if weight.blank?
-      0
-    elsif exercise.bilateral?
-      weight * (reps || 0)
+    return 0 if weight.blank?
+
+    if exercise.unilateral?
+      # 片側の場合：記録された重量は片方なので2倍する
+      weight * (reps || 0) * 2
     else
-      weight * ((left_reps || 0) + (right_reps || 0))
+      # 両側の場合：通常の計算
+      weight * (reps || 0)
     end
   end
 
@@ -58,37 +60,20 @@ class StrengthSet < WorkoutSet
   def calculate_volume
     self.volume = if weight.blank?
                     0
-    elsif exercise.bilateral?
-                    weight * (reps || 0)
+    elsif exercise.unilateral?
+                    # 片側の場合：記録された重量は片方なので2倍する
+                    weight * (reps || 0) * 2
     else
-                    weight * ((left_reps || 0) + (right_reps || 0))
+                    # 両側の場合：通常の計算
+                    weight * (reps || 0)
     end
   end
 
   def exercise_must_be_strength
     return unless workout_exercise&.exercise
 
-    if exercise.body_part == 'cardio'
+    if exercise.cardio?
       errors.add(:base, :invalid_body_part)
-    end
-  end
-
-  def validate_reps_by_laterality
-    return unless workout_exercise&.exercise
-
-    if exercise.bilateral?
-      # 両側の場合：repsが必須、left_reps/right_repsは設定不可
-      errors.add(:reps, :blank) if reps.blank?
-      errors.add(:reps, :greater_than_or_equal_to, count: 1, value: reps) if reps.present? && reps < 1
-      errors.add(:left_reps, :present) if left_reps.present?
-      errors.add(:right_reps, :present) if right_reps.present?
-    elsif exercise.unilateral?
-      # 片側の場合：left_reps/right_repsが必須、repsは設定不可
-      errors.add(:left_reps, :blank) if left_reps.blank?
-      errors.add(:right_reps, :blank) if right_reps.blank?
-      errors.add(:left_reps, :greater_than_or_equal_to, count: 0, value: left_reps) if left_reps.present? && left_reps < 0
-      errors.add(:right_reps, :greater_than_or_equal_to, count: 0, value: right_reps) if right_reps.present? && right_reps < 0
-      errors.add(:reps, :present) if reps.present?
     end
   end
 end
