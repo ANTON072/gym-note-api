@@ -75,13 +75,25 @@ Rails の単一テーブル継承（STI）を使用：
 | ------------- | -------- | -------------------------- |
 | id            | integer  | 主キー                     |
 | name          | string   | 種目名                     |
-| is_dumbbell   | boolean  | ダンベル種目フラグ         |
-| is_unilateral | boolean  | 片方ずつ実施する種目フラグ |
-| is_bodyweight | boolean  | 自重種目フラグ             |
-| is_cardio     | boolean  | 有酸素運動フラグ           |
+| body_part     | integer  | 体の部位（enum: 0-5）      |
+| laterality    | integer  | 実施形態（enum: 0-1）      |
 | memo          | text     | メモ                       |
 | created_at    | datetime | 作成日時（UTC）            |
 | updated_at    | datetime | 更新日時（UTC）            |
+
+**body_part enum:**
+- 0: legs (脚部)
+- 1: back (背中)
+- 2: shoulders (肩)
+- 3: arms (腕部)
+- 4: chest (胸部)
+- 5: cardio (有酸素運動)
+
+**laterality enum:**
+- 0: bilateral (両側同時実施)
+- 1: unilateral (片側ずつ実施)
+
+※ cardioの場合はlateralityはNULL
 
 ### Workout
 
@@ -181,10 +193,8 @@ GET /workouts?start_date=2024-01-01&end_date=2024-01-31&page=1&per_page=10
           "exercise": {
             "id": 1,
             "name": "ベンチプレス",
-            "is_dumbbell": false,
-            "is_unilateral": false,
-            "is_bodyweight": false,
-            "is_cardio": false,
+            "body_part": "chest",
+            "laterality": "bilateral",
             "memo": null
           },
           "sets": [
