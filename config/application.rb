@@ -43,10 +43,6 @@ module App
     # Strong Parametersのエラー時に例外を発生させる（開発環境での設定漏れ防止）
     config.action_controller.action_on_unpermitted_parameters = :raise if Rails.env.development? || Rails.env.test?
 
-    # Solid Cable と Solid Queue を無効化
-    config.solid_cable.connects_to = nil
-    config.solid_queue.connects_to = nil
-
     # ジェネレーター設定
     config.generators do |g|
       g.test_framework false  # テストファイルを生成しない
