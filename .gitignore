@@ -57,3 +57,5 @@ yarn-debug.log*
 # Ignore database dumps
 *.sql
 *.dump
+.env.production
+nginx/conf.d/app.conf
