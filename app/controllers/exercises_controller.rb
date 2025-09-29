@@ -40,7 +40,7 @@ class ExercisesController < ApplicationController
   def set_exercise
     @exercise = Exercise.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "Exercise not found" }, status: :not_found
+    render json: { error: I18n.t("errors.exercise_not_found") }, status: :not_found
   end
 
   def exercise_params

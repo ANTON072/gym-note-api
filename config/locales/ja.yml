@@ -34,6 +34,10 @@ ja:
               inclusion: "無効な実施形態が選択されました"
             memo:
               too_long: "メモは1000文字以内で入力してください"
+  
+  errors:
+    invalid_parameters: "無効なパラメータが含まれています: %{params}"
+    exercise_not_found: "指定されたエクササイズが見つかりません"
         cardio_set:
           attributes:
             base:
