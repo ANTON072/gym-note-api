@@ -35,6 +35,9 @@ gem "thruster", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
+# Convert JSON keys between snake_case and camelCase
+gem "olive_branch"
+
 # JWT for Firebase token verification
 gem "jwt"
 
