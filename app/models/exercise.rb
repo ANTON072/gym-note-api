@@ -25,6 +25,7 @@ class Exercise < ApplicationRecord
   validates :body_part, presence: true
   validates :laterality, presence: true, unless: :cardio?
   validates :laterality, absence: { message: :cardio_cannot_have_laterality }, if: :cardio?
+  validates :memo, length: { maximum: 1000 }
 
   def cardio?
     body_part == "cardio"

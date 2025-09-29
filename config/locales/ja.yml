@@ -22,8 +22,18 @@ ja:
               must_be_after_start_time: "は開始時刻より後に設定してください"
         exercise:
           attributes:
+            name:
+              blank: "種目名を入力してください"
+              taken: "この種目名はすでに存在します"
+            body_part:
+              blank: "部位を選択してください"
+              inclusion: "無効な部位が選択されました"
             laterality:
+              blank: "実施形態を選択してください"
               cardio_cannot_have_laterality: "有酸素運動の場合、実施形態は設定できません"
+              inclusion: "無効な実施形態が選択されました"
+            memo:
+              too_long: "メモは1000文字以内で入力してください"
         cardio_set:
           attributes:
             base:
@@ -32,3 +42,7 @@ ja:
           attributes:
             base:
               invalid_body_part: "有酸素運動のエクササイズには使用できません"
+  
+  errors:
+    invalid_parameters: "無効なパラメータが含まれています: %{params}"
+    exercise_not_found: "指定されたエクササイズが見つかりません"
