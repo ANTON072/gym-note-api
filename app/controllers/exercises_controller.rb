@@ -4,18 +4,16 @@ class ExercisesController < ApplicationController
 
   def index
     @exercises = Exercise.all.order(created_at: :desc)
-    render json: @exercises
   end
 
   def show
-    render json: @exercise
   end
 
   def create
     @exercise = Exercise.new(exercise_params)
 
     if @exercise.save
-      render json: @exercise, status: :created
+      render :create, status: :created
     else
       render json: { errors: @exercise.errors }, status: :unprocessable_entity
     end
@@ -23,7 +21,7 @@ class ExercisesController < ApplicationController
 
   def update
     if @exercise.update(exercise_params)
-      render json: @exercise
+      render :update
     else
       render json: { errors: @exercise.errors }, status: :unprocessable_entity
     end
