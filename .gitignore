@@ -58,3 +58,4 @@ yarn-debug.log*
 *.sql
 *.dump
 .env.production
+nginx/conf.d/app.conf
