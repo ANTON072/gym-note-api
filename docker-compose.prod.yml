@@ -37,6 +37,7 @@ services:
       - app-network
     volumes:
       - rails-storage:/rails/storage
+      - rails-public:/rails/public
 
   nginx:
     image: nginx:alpine
@@ -49,6 +50,7 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-var:/var/lib/letsencrypt
       - certbot-webroot:/var/www/certbot
+      - rails-public:/rails/public:ro
     depends_on:
       - web
     restart: unless-stopped
@@ -67,6 +69,7 @@ services:
 volumes:
   mariadb-data:
   rails-storage:
+  rails-public:
   certbot-etc:
   certbot-var:
   certbot-webroot:
