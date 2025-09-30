@@ -78,7 +78,7 @@ Rails.application.configure do
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
-    "api.gym-note.net",
+    "api.gym-note.net"
   ]
   #
   # Skip DNS rebinding protection for the default health check endpoint.
