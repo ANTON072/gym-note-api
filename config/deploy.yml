@@ -1,8 +1,10 @@
+<% require "dotenv"; Dotenv.load(".env") %>
+
 # Name of your application. Used to uniquely configure containers.
 service: gym-note-api
 
 # Name of the container image.
-image: <%= ENV['DOCKER_HUB_USERNAME'] %>/gym-note-api
+image: <%= ENV["DOCKER_HUB_USERNAME"] %>/gym-note-api
 
 # Deploy to these servers.
 servers:
@@ -25,11 +27,10 @@ proxy:
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: <%= ENV['DOCKER_HUB_USERNAME'] %>
+  username: <%= ENV["DOCKER_HUB_USERNAME"] %>
 
   # Always use an access token rather than real password when possible.
-  password:
-    - KAMAL_REGISTRY_PASSWORD
+  password: <%= ENV["KAMAL_REGISTRY_PASSWORD"] %>
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
