@@ -303,7 +303,6 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
-  dotenv
   jbuilder
   jwt
   kamal
