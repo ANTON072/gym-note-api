@@ -57,5 +57,13 @@ yarn-debug.log*
 # Ignore database dumps
 *.sql
 *.dump
+
+# Ignore SQLite database files
+/db/*.sqlite3
+/db/*.sqlite3-*
+/db/*.db
 .env.production
 nginx/conf.d/app.conf
+
+# Ignore Kamal secrets
+.kamal/secrets

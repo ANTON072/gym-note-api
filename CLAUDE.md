@@ -68,7 +68,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - Ruby 3.4.5
 - Rails 8.0.2+ (API モード)
-- MariaDB 11.2
+- SQLite 3
 - Docker/Docker Compose 構成
 
 ### アプリケーション構成

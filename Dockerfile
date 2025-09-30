@@ -1,15 +1,16 @@
 FROM ruby:3.4.5
 
-# 必要なパッケージをインストール（MariaDBクライアント含む）
+# 必要なパッケージをインストール（SQLite3用）
 RUN apt-get update -qq && apt-get install -y \
     build-essential \
-    libmariadb-dev \
+    libsqlite3-dev \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # 作業ディレクトリを設定
 WORKDIR /app
 
-# GemfileとGemfile.lockをコピー
+# Gemfileをコピー
 COPY Gemfile Gemfile.lock ./
 
 # bundlerをインストール
