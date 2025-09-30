@@ -2,7 +2,7 @@
 service: gym-note-api
 
 # Name of the container image.
-image: YOUR_DOCKER_HUB_USERNAME/gym-note-api
+image: <%= ENV['DOCKER_HUB_USERNAME'] %>/gym-note-api
 
 # Deploy to these servers.
 servers:
@@ -25,7 +25,7 @@ proxy:
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: YOUR_DOCKER_HUB_USERNAME
+  username: <%= ENV['DOCKER_HUB_USERNAME'] %>
 
   # Always use an access token rather than real password when possible.
   password:
