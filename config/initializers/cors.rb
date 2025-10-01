@@ -5,17 +5,19 @@
 
 # Read more: https://github.com/cyu/rack-cors
 
+web_local_origin = "http://localhost:5173"
+web_production_origin = "https://gym-note.net"
+
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     # 環境に応じて許可するオリジンを設定
     allowed_origins = case Rails.env
     when "development"
-      [ "http://localhost:3001", "http://localhost:3000" ]
+      [ web_local_origin ]
     when "production"
-      # TODO: 本番環境のフロントエンドURLに置き換える
-      [ "https://app.example.com" ]
+      [ web_production_origin ]
     else
-      [ "http://localhost:3001" ]
+      [ web_local_origin ]
     end
 
     origins(*allowed_origins)
