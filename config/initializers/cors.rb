@@ -15,7 +15,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     when "development"
       [ web_local_origin ]
     when "production"
-      [ web_production_origin ]
+      [ web_production_origin, web_local_origin ]
     else
       [ web_local_origin ]
     end
