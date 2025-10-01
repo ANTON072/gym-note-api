@@ -62,6 +62,8 @@ kamal deploy
 
 ### ログの確認
 
+#### 基本的なログ確認コマンド
+
 ```bash
 # アプリケーションのログを確認
 kamal app logs
@@ -72,9 +74,44 @@ kamal app logs -f
 # 特定のサーバーのログを確認
 kamal app logs --hosts your-server-hostname
 
+# 過去のログを多めに取得
+kamal app logs --lines 2000
+```
+
+#### エラー調査に便利なコマンド
+
+```bash
 # エラーログのみ確認
 kamal app logs --grep ERROR
+
+# 500エラーのみ確認
+kamal app logs | grep "500"
+
+# 問題調査時：ノイズを除外して見やすくする
+kamal app logs --lines 2000 | grep -v "OPTIONS\|INFO.*Request" | head -50
+
+# リアルタイムでエラーのみ監視
+kamal app logs -f | grep -E "(Error|Exception|500)"
+
+# 特定のキーワードで監視（例：Firebase関連）
+kamal app logs -f | grep -E "(FIREBASE|Authentication|NameError)"
 ```
+
+#### ログ確認の使い分け
+
+- **デバッグ時**: `kamal app logs -f` でリアルタイム監視
+- **問題調査時**: `kamal app logs --lines 2000 | grep -v "OPTIONS\|INFO.*Request"` で過去ログ確認
+- **エラー特定時**: `kamal app logs | grep -E "(Error|Exception|500)"` でエラーのみ抽出
+
+#### 本番環境のログ設定について
+
+本番環境では`config/environments/production.rb`で以下の設定によりSTDOUTにログ出力されています：
+
+```ruby
+config.logger = ActiveSupport::TaggedLogging.logger(STDOUT)
+```
+
+そのため、`log/production.log`ファイルは作成されず、すべてのログはDockerコンテナのstdout経由でKamalから確認できます。
 
 ### マイグレーションの実行
 
