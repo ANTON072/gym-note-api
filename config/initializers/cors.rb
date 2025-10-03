@@ -7,6 +7,7 @@
 
 web_local_origin = "http://localhost:5173"
 web_production_origin = "https://gym-note.net"
+web_development_origin = /\Ahttps:\/\/gym-note-app--develop-.*\.web\.app\z/
 
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
@@ -15,7 +16,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     when "development"
       [ web_local_origin ]
     when "production"
-      [ web_production_origin, web_local_origin ]
+      [ web_production_origin, web_local_origin, web_development_origin ]
     else
       [ web_local_origin ]
     end
