@@ -3,7 +3,6 @@
 # Table name: workout_exercises
 #
 #  id          :bigint           not null, primary key
-#  memo        :text(65535)
 #  order_index :integer          not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
